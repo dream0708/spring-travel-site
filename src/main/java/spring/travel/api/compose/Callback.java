@@ -10,6 +10,11 @@ public class Callback<T> implements ListenableFutureCallback<ResponseEntity<T>> 
     private final SuccessHandler<Optional<T>> successHandler;
     private final FailureHandler failureHandler;
 
+    public Callback(SuccessHandler<Optional<T>> successHandler) {
+        this.successHandler = successHandler;
+        failureHandler = (t) -> successHandler.handle(Optional.ofNullable(null));
+    }
+
     public Callback(SuccessHandler<Optional<T>> successHandler, FailureHandler failureHandler) {
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;

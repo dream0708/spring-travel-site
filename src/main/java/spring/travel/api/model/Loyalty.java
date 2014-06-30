@@ -6,6 +6,14 @@ public class Loyalty {
 
     private int points;
 
+    public Loyalty() {
+    }
+
+    public Loyalty(Group group, int points) {
+        this.group = group;
+        this.points = points;
+    }
+
     public Group getGroup() {
         return group;
     }

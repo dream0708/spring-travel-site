@@ -8,6 +8,15 @@ public class Offer {
 
     private String image;
 
+    public Offer() {
+    }
+
+    public Offer(String title, String details, String image) {
+        this.title = title;
+        this.details = details;
+        this.image = image;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -8,6 +8,15 @@ public class Profile {
 
     private Gender gender;
 
+    public Profile() {
+    }
+
+    public Profile(LifeCycle lifecycle, Spending spending, Gender gender) {
+        this.lifecycle = lifecycle;
+        this.spending = spending;
+        this.gender = gender;
+    }
+
     public LifeCycle getLifecycle() {
         return lifecycle;
     }

@@ -42,19 +42,16 @@ public class HomeController {
 
         ParallelCollector<Profile, Loyalty> parallelCollector = new ParallelCollector<>(
                 (profile, loyalty) -> offersService.offers(profile, loyalty,
-                        (offers) -> result.setResult(offers.orElse(Collections.emptyList())),
-                        (t) -> result.setResult(Collections.emptyList())
+                        (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
                 )
         );
 
         profileService.profile(userId,
-                (profile) -> parallelCollector.updateA(profile),
-                (t) -> parallelCollector.updateA(Optional.<Profile>empty())
+                (profile) -> parallelCollector.updateA(profile)
         );
 
         loyaltyService.loyalty(userId,
-                (loyalty) -> parallelCollector.updateB(loyalty),
-                (t) -> parallelCollector.updateB(Optional.<Loyalty>empty())
+                (loyalty) -> parallelCollector.updateB(loyalty)
         );
 
         return result;
