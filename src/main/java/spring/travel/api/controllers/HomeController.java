@@ -52,7 +52,7 @@ public class HomeController {
     public DeferredResult<List<Offer>> home(@RequestParam(value = "id", required = false) String id) {
         Optional<String> userId = Optional.ofNullable(id);
 
-        final DeferredResult<List<Offer>> result = new DeferredResult<>();
+        DeferredResult<List<Offer>> result = new DeferredResult<>();
 
         ParallelCollector<Profile, Loyalty> parallelCollector = new ParallelCollector<>(
                 (profile, loyalty) -> offersService.offers(profile, loyalty,
