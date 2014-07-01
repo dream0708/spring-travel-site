@@ -33,12 +33,18 @@ public class OffersService {
     @Autowired
     private AsyncRestTemplate asyncRestTemplate;
 
+    private String url;
+
+    public OffersService(String url) {
+        this.url = url;
+    }
+
     public void offers(Optional<Profile> profile, Optional<Loyalty> loyalty,
                        SuccessHandler<Optional<List<Offer>>> successHandler) {
 
         ParameterizedTypeReference<List<Offer>> typeRef = new ParameterizedTypeReference<List<Offer>>() {};
 
-        asyncRestTemplate.exchange("http://localhost:9091/offers" + queryString(profile, loyalty),
+        asyncRestTemplate.exchange(url + queryString(profile, loyalty),
                 HttpMethod.GET, null, typeRef).
                 addCallback(new Callback<>(successHandler));
     }

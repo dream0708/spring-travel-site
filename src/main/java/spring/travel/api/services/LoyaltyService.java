@@ -28,9 +28,15 @@ public class LoyaltyService {
     @Autowired
     private AsyncRestTemplate asyncRestTemplate;
 
+    private String url;
+
+    public LoyaltyService(String url) {
+        this.url = url;
+    }
+
     public void loyalty(Optional<String> id, SuccessHandler<Optional<Loyalty>> successHandler) {
         if (id.isPresent()) {
-            asyncRestTemplate.getForEntity("http://localhost:9091/loyalty/" + id.get(), Loyalty.class).
+            asyncRestTemplate.getForEntity(url + "/" + id.get(), Loyalty.class).
                     addCallback(new Callback<>(successHandler));
         } else {
             successHandler.handle(Optional.<Loyalty>empty());

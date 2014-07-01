@@ -15,11 +15,13 @@
  */
 package spring.travel.api;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
@@ -28,11 +30,21 @@ import spring.travel.api.services.ProfileService;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
+@PropertySource("classpath:application.properties")
 public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+    @Value("${profile.service.url}")
+    private String profileServiceUrl;
+
+    @Value("${loyalty.service.url}")
+    private String loyaltyServiceUrl;
+
+    @Value("${offers.service.url}")
+    private String offersServiceUrl;
 
     @Bean
     public AsyncRestTemplate asyncRestTemplate() {
@@ -41,16 +53,16 @@ public class Application {
 
     @Bean
     public ProfileService profileService() {
-        return new ProfileService();
+        return new ProfileService(profileServiceUrl);
     }
 
     @Bean
     public LoyaltyService loyaltyService() {
-        return new LoyaltyService();
+        return new LoyaltyService(loyaltyServiceUrl);
     }
 
     @Bean
     public OffersService offersService() {
-        return new OffersService();
+        return new OffersService(offersServiceUrl);
     }
 }
