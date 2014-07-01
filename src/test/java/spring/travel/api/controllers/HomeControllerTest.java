@@ -71,9 +71,9 @@ public class HomeControllerTest {
 
     @Test
     public void shouldReturnOffers() throws Exception {
-        stubGet("/profile/123", new Profile(LifeCycle.Family, Spending.Economy, Gender.Male));
+        stubGet("/profile/user/123", new Profile(LifeCycle.Family, Spending.Economy, Gender.Male));
 
-        stubGet("/loyalty/123", new Loyalty(Group.Bronze, 100));
+        stubGet("/loyalty/user/123", new Loyalty(Group.Bronze, 100));
 
         List<Offer> offers = Arrays.asList(
             new Offer("Offer 1", "Blah blah", "offer1.jpg"),
