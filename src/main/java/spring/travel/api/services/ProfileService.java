@@ -17,8 +17,11 @@ package spring.travel.api.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.compose.Callback;
+import spring.travel.api.compose.ImmediateFuture;
 import spring.travel.api.compose.SuccessHandler;
 import spring.travel.api.model.Profile;
 
@@ -35,12 +38,11 @@ public class ProfileService {
         this.url = url;
     }
 
-    public void profile(Optional<String> id, SuccessHandler<Optional<Profile>> successHandler) {
+    public ListenableFuture<ResponseEntity<Profile>> profile(Optional<String> id) {
         if (id.isPresent()) {
-            asyncRestTemplate.getForEntity(url + "/" + id.get(), Profile.class).
-                    addCallback(new Callback<>(successHandler));
+            return asyncRestTemplate.getForEntity(url + "/" + id.get(), Profile.class);
         } else {
-            successHandler.handle(Optional.<Profile>empty());
+            return new ImmediateFuture<>();
         }
     }
 }

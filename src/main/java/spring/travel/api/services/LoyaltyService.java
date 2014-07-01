@@ -16,8 +16,11 @@
 package spring.travel.api.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.compose.Callback;
+import spring.travel.api.compose.ImmediateFuture;
 import spring.travel.api.compose.SuccessHandler;
 import spring.travel.api.model.Loyalty;
 
@@ -34,12 +37,11 @@ public class LoyaltyService {
         this.url = url;
     }
 
-    public void loyalty(Optional<String> id, SuccessHandler<Optional<Loyalty>> successHandler) {
+    public ListenableFuture<ResponseEntity<Loyalty>> loyalty(Optional<String> id) {
         if (id.isPresent()) {
-            asyncRestTemplate.getForEntity(url + "/" + id.get(), Loyalty.class).
-                    addCallback(new Callback<>(successHandler));
+            return asyncRestTemplate.getForEntity(url + "/" + id.get(), Loyalty.class);
         } else {
-            successHandler.handle(Optional.<Loyalty>empty());
+            return new ImmediateFuture<>();
         }
     }
 }
