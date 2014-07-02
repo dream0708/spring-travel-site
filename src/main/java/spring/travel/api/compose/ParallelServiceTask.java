@@ -2,9 +2,9 @@ package spring.travel.api.compose;
 
 public class ParallelServiceTask<R1, R2> {
 
-    ServiceTask<R1> serviceTask1;
+    private ServiceTask<R1> serviceTask1;
 
-    ServiceTask<R2> serviceTask2;
+    private ServiceTask<R2> serviceTask2;
 
     private ParallelCollector<R1, R2> parallelCollector;
 

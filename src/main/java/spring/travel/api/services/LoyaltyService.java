@@ -19,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
-import spring.travel.api.compose.Callback;
 import spring.travel.api.compose.ImmediateFuture;
-import spring.travel.api.compose.SuccessHandler;
 import spring.travel.api.model.Loyalty;
 
 import java.util.Optional;
