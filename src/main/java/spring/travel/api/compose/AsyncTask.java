@@ -15,11 +15,11 @@
  */
 package spring.travel.api.compose;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.concurrent.ListenableFuture;
+import java.util.Optional;
 
-@FunctionalInterface
-public interface ServiceTask<R> {
+public interface AsyncTask<T> {
 
-    ListenableFuture<ResponseEntity<R>> execute();
+    void execute();
+
+    AsyncTask<T> onCompletion(CompletionHandler<Optional<T>> completionHandler);
 }

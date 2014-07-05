@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import spring.travel.api.compose.ParallelServiceTask;
+import spring.travel.api.compose.ParallelAsyncTask;
+import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
@@ -54,14 +55,18 @@ public class HomeController {
 
         DeferredResult<List<Offer>> result = new DeferredResult<>();
 
-        new ParallelServiceTask<Profile, Loyalty>(
-                () -> profileService.profile(userId),
-                () -> loyaltyService.loyalty(userId)
-        ).execute(
-                (profile, loyalty) -> offersService.offers(profile, loyalty,
-                        (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
-                )
-        );
+        new ParallelAsyncTask<>(
+                profileService.profile(userId),
+                loyaltyService.loyalty(userId)
+        ).onCompletion(
+                (tuple) -> {
+                    Tuple2<Optional<Profile>, Optional<Loyalty>> userData =
+                            tuple.orElse(new Tuple2(Optional.empty(), Optional.empty()));
+                    offersService.offers(userData.a(), userData.b()).onCompletion(
+                            (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
+                    ).execute();
+                }
+        ).execute();
 
         return result;
     }

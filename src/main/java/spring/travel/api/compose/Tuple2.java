@@ -15,10 +15,21 @@
  */
 package spring.travel.api.compose;
 
-import java.util.Optional;
+public class Tuple2<A, B> {
 
-@FunctionalInterface
-public interface ParallelCompletionHandler<A, B> {
+    private final A a;
+    private final B b;
 
-    void handle(Optional<A> a, Optional<B> b);
+    public Tuple2(A a, B b) {
+        this.a = a;
+        this.b = b;
+    }
+
+    public A a() {
+        return a;
+    }
+
+    public B b() {
+        return b;
+    }
 }

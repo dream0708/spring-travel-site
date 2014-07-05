@@ -15,8 +15,20 @@
  */
 package spring.travel.api.compose;
 
-@FunctionalInterface
-public interface FailureHandler {
+import java.util.Optional;
 
-    void handle(Throwable t);
+public class ImmediatelyNoneAsyncTaskAdapter<T> implements AsyncTask<T> {
+
+    private CompletionHandler<Optional<T>> completionHandler;
+
+    @Override
+    public void execute() {
+        completionHandler.handle(Optional.<T>empty());
+    }
+
+    @Override
+    public AsyncTask<T> onCompletion(CompletionHandler<Optional<T>> completionHandler) {
+        this.completionHandler = completionHandler;
+        return this;
+    }
 }

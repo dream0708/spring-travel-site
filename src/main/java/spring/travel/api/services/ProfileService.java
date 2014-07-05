@@ -16,10 +16,10 @@
 package spring.travel.api.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
-import spring.travel.api.compose.ImmediateFuture;
+import spring.travel.api.compose.AsyncTask;
+import spring.travel.api.compose.ImmediatelyNoneAsyncTaskAdapter;
+import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
 import spring.travel.api.model.Profile;
 
 import java.util.Optional;
@@ -35,11 +35,13 @@ public class ProfileService {
         this.url = url;
     }
 
-    public ListenableFuture<ResponseEntity<Profile>> profile(Optional<String> id) {
+    public AsyncTask<Profile> profile(Optional<String> id) {
         if (id.isPresent()) {
-            return asyncRestTemplate.getForEntity(url + "/" + id.get(), Profile.class);
+            return new ListenableFutureAsyncTaskAdapter<>(
+                    () -> asyncRestTemplate.getForEntity(url + "/" + id.get(), Profile.class)
+            );
         } else {
-            return new ImmediateFuture<>();
+            return new ImmediatelyNoneAsyncTaskAdapter();
         }
     }
 }

@@ -16,7 +16,7 @@
 package spring.travel.api.compose;
 
 @FunctionalInterface
-public interface SuccessHandler<T> {
+public interface CompletionHandler<T> {
 
     void handle(T t);
 }

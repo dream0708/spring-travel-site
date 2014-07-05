@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.AsyncRestTemplate;
-import spring.travel.api.compose.Callback;
-import spring.travel.api.compose.SuccessHandler;
+import spring.travel.api.compose.AsyncTask;
+import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
@@ -39,14 +39,14 @@ public class OffersService {
         this.url = url;
     }
 
-    public void offers(Optional<Profile> profile, Optional<Loyalty> loyalty,
-                       SuccessHandler<Optional<List<Offer>>> successHandler) {
-
-        ParameterizedTypeReference<List<Offer>> typeRef = new ParameterizedTypeReference<List<Offer>>() {};
-
-        asyncRestTemplate.exchange(url + queryString(profile, loyalty),
-                HttpMethod.GET, null, typeRef).
-                addCallback(new Callback<>(successHandler));
+    public AsyncTask<List<Offer>> offers(Optional<Profile> profile, Optional<Loyalty> loyalty) {
+        return new ListenableFutureAsyncTaskAdapter<>(
+            () -> {
+                ParameterizedTypeReference<List<Offer>> typeRef = new ParameterizedTypeReference<List<Offer>>() {};
+                return asyncRestTemplate.exchange(url + queryString(profile, loyalty),
+                        HttpMethod.GET, null, typeRef);
+            }
+        );
     }
 
     private String queryString(Optional<Profile> profile, Optional<Loyalty> loyalty) {
