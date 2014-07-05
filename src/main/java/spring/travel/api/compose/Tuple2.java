@@ -15,6 +15,8 @@
  */
 package spring.travel.api.compose;
 
+import java.util.Optional;
+
 public class Tuple2<A, B> {
 
     private final A a;
@@ -31,5 +33,13 @@ public class Tuple2<A, B> {
 
     public B b() {
         return b;
+    }
+
+    public static <A, B> Tuple2<A, B> of(A a, B b) {
+        return new Tuple2<>(a, b);
+    }
+
+    public static <A, B> Tuple2<Optional<A>, Optional<B>> empty() {
+        return new Tuple2<>(Optional.empty(), Optional.empty());
     }
 }

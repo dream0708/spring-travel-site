@@ -112,18 +112,18 @@ public class HomeControllerTest {
         stubGet("/offers", offers);
 
         MvcResult mvcResult = this.mockMvc.perform(get("/home").
-                accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
-                andExpect(status().isOk()).
-                andExpect(request().asyncStarted()).
-                andExpect(request().asyncResult(isA(List.class))).
-                andReturn();
+            accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
+            andExpect(status().isOk()).
+            andExpect(request().asyncStarted()).
+            andExpect(request().asyncResult(isA(List.class))).
+            andReturn();
 
 
         this.mockMvc.perform(asyncDispatch(mvcResult)).
-                andExpect(status().isOk()).
-                andExpect(jsonPath("$[0].title").value("Offer 1")).
-                andExpect(jsonPath("$[0].image").value("offer1.jpg")).
-                andExpect(jsonPath("$[1].title").value("Offer 2")).
-                andExpect(jsonPath("$[1].image").value("offer2.jpg"));
+            andExpect(status().isOk()).
+            andExpect(jsonPath("$[0].title").value("Offer 1")).
+            andExpect(jsonPath("$[0].image").value("offer1.jpg")).
+            andExpect(jsonPath("$[1].title").value("Offer 2")).
+            andExpect(jsonPath("$[1].image").value("offer2.jpg"));
     }
 }

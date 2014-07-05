@@ -43,8 +43,7 @@ public class OffersService {
         return new ListenableFutureAsyncTaskAdapter<>(
             () -> {
                 ParameterizedTypeReference<List<Offer>> typeRef = new ParameterizedTypeReference<List<Offer>>() {};
-                return asyncRestTemplate.exchange(url + queryString(profile, loyalty),
-                        HttpMethod.GET, null, typeRef);
+                return asyncRestTemplate.exchange(url + queryString(profile, loyalty), HttpMethod.GET, null, typeRef);
             }
         );
     }

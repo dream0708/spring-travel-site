@@ -56,16 +56,16 @@ public class HomeController {
         DeferredResult<List<Offer>> result = new DeferredResult<>();
 
         new ParallelAsyncTask<>(
-                profileService.profile(userId),
-                loyaltyService.loyalty(userId)
+            profileService.profile(userId),
+            loyaltyService.loyalty(userId)
         ).onCompletion(
-                (tuple) -> {
-                    Tuple2<Optional<Profile>, Optional<Loyalty>> userData =
-                            tuple.orElse(new Tuple2(Optional.empty(), Optional.empty()));
-                    offersService.offers(userData.a(), userData.b()).onCompletion(
-                            (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
-                    ).execute();
-                }
+            (tuple) -> {
+                Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
+
+                offersService.offers(userData.a(), userData.b()).onCompletion(
+                    (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
+                ).execute();
+            }
         ).execute();
 
         return result;

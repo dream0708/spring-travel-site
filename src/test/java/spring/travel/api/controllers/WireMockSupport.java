@@ -28,9 +28,8 @@ public class WireMockSupport {
 
     public static void stubGet(String url, Object response) throws Exception {
         stubFor(WireMock.get(urlEqualTo(url)).
-                willReturn(aResponse().
-                        withHeader("Content-Type", "application/json").
-                        withBody(mapper.writeValueAsString(response))));
-
+            willReturn(aResponse().
+                withHeader("Content-Type", "application/json").
+                withBody(mapper.writeValueAsString(response))));
     }
 }

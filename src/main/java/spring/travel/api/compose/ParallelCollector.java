@@ -32,14 +32,14 @@ public class ParallelCollector<A, B> {
     public synchronized void updateA(Optional<A> a) {
         this.a = a;
         if (b != null) {
-           completionHandler.handle(new Tuple2<>(a, b));
+           completionHandler.handle(Tuple2.of(a, b));
         }
     }
 
     public synchronized void updateB(Optional<B> b) {
         this.b = b;
         if (a != null) {
-            completionHandler.handle(new Tuple2<>(a, b));
+            completionHandler.handle(Tuple2.of(a, b));
         }
     }
 }
