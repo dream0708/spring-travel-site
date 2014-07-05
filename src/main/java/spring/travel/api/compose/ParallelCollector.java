@@ -19,9 +19,9 @@ import java.util.Optional;
 
 public class ParallelCollector<A, B> {
 
-    private volatile Optional<A> a;
+    private Optional<A> a;
 
-    private volatile Optional<B> b;
+    private Optional<B> b;
 
     private final CompletionHandler<Tuple2<Optional<A>, Optional<B>>> completionHandler;
 
