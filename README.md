@@ -1,4 +1,4 @@
-Spring Travel API
-=================
+Spring Travel Site
+==================
 
-Asynchronous implementation of travel API using Spring MVC, DeferredResults, AsyncRestTemplate and FunctionalInterfaces.
+Implementation of noddy travel website using Spring MVC, DeferredResults, AsyncRestTemplate and FunctionalInterfaces.

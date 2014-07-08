@@ -7,8 +7,8 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.1.0.RELEASE</version>
     </parent>
-    <groupId>spring-travel-api</groupId>
-    <artifactId>spring-travel-api</artifactId>
+    <groupId>spring-travel-site</groupId>
+    <artifactId>spring-travel-site</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -23,6 +23,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
