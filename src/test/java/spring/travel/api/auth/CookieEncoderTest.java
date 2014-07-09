@@ -32,7 +32,7 @@ public class CookieEncoderTest {
 
         when(mockSigner.sign(anyString())).thenReturn(signature);
         String cookie = encoder.encode(values);
-        assertEquals("TEST_SESSION=\"" + signature + "-foo=bar&moose=antlers\"", cookie);
+        assertEquals("TEST_SESSION=" + signature + "-foo=bar&moose=antlers", cookie);
     }
 
     @Test
@@ -45,6 +45,6 @@ public class CookieEncoderTest {
 
         when(mockSigner.sign(anyString())).thenReturn(signature);
         String cookie = encoder.encode(values);
-        assertEquals("MOOSE_SESSION=\"" + signature + "-mo+ose=ant%40lers\"", cookie);
+        assertEquals("MOOSE_SESSION=" + signature + "-mo+ose=ant%40lers", cookie);
     }
 }

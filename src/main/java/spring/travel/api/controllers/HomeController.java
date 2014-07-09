@@ -21,25 +21,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import spring.travel.api.auth.OptionalSession;
-import spring.travel.api.auth.Session;
 import spring.travel.api.compose.ParallelAsyncTask;
 import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
-import spring.travel.api.model.User;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
 import spring.travel.api.services.ProfileService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
-public class HomeController extends OptionalUserController {
+public class HomeController extends RemoteUserController {
 
     @Autowired
     private ProfileService profileService;
@@ -52,11 +50,11 @@ public class HomeController extends OptionalUserController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<List<Offer>> home(@OptionalSession Optional<Session> session) {
-        return withOptionalUser(session,
-            (result, user) -> new ParallelAsyncTask<>(
-                profileService.profile(user),
-                loyaltyService.loyalty(user)
+    public DeferredResult<List<Offer>> home(HttpServletRequest request) {
+        return withRemoteUser(request,
+            (result, remoteUser) -> new ParallelAsyncTask<>(
+                profileService.profile(remoteUser.getUser()),
+                loyaltyService.loyalty(remoteUser.getUser())
             ).onCompletion(
                 (tuple) -> {
                     Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
