@@ -35,6 +35,11 @@ public class Tuple2<A, B> {
         return b;
     }
 
+    @Override
+    public String toString() {
+        return "Tuple2<" + a + "," + b + ">";
+    }
+
     public static <A, B> Tuple2<A, B> of(A a, B b) {
         return new Tuple2<>(a, b);
     }

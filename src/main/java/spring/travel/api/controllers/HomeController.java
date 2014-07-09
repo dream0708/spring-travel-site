@@ -18,10 +18,11 @@ package spring.travel.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import spring.travel.api.auth.OptionalSession;
+import spring.travel.api.auth.Session;
 import spring.travel.api.compose.ParallelAsyncTask;
 import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Loyalty;
@@ -37,7 +38,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/home")
-public class HomeController {
+public class HomeController extends OptionalUserController {
 
     @Autowired
     private ProfileService profileService;
@@ -50,24 +51,22 @@ public class HomeController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<List<Offer>> home(@RequestParam(value = "id", required = false) String id) {
-        Optional<String> userId = Optional.ofNullable(id);
+    public DeferredResult<List<Offer>> home(@OptionalSession Optional<Session> session) {
+        return withOptionalUser(session,
+            (result, user) -> {
+                new ParallelAsyncTask<>(
+                    profileService.profile(user),
+                    loyaltyService.loyalty(user)
+                ).onCompletion(
+                    (tuple) -> {
+                        Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
 
-        DeferredResult<List<Offer>> result = new DeferredResult<>();
-
-        new ParallelAsyncTask<>(
-            profileService.profile(userId),
-            loyaltyService.loyalty(userId)
-        ).onCompletion(
-            (tuple) -> {
-                Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
-
-                offersService.offers(userData.a(), userData.b()).onCompletion(
-                    (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
+                        offersService.offers(userData.a(), userData.b()).onCompletion(
+                            (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
+                        ).execute();
+                    }
                 ).execute();
             }
-        ).execute();
-
-        return result;
+        );
     }
 }

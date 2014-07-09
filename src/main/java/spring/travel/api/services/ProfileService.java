@@ -21,6 +21,7 @@ import spring.travel.api.compose.AsyncTask;
 import spring.travel.api.compose.ImmediatelyNoneAsyncTaskAdapter;
 import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
 import spring.travel.api.model.Profile;
+import spring.travel.api.model.User;
 
 import java.util.Optional;
 
@@ -35,10 +36,10 @@ public class ProfileService {
         this.url = url;
     }
 
-    public AsyncTask<Profile> profile(Optional<String> id) {
-        if (id.isPresent()) {
+    public AsyncTask<Profile> profile(Optional<User> user) {
+        if (user.isPresent()) {
             return new ListenableFutureAsyncTaskAdapter<>(
-                () -> asyncRestTemplate.getForEntity(url + "/" + id.get(), Profile.class)
+                () -> asyncRestTemplate.getForEntity(url + "/" + user.get().getId(), Profile.class)
             );
         } else {
             return new ImmediatelyNoneAsyncTaskAdapter();

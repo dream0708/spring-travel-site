@@ -57,8 +57,7 @@ public class OffersService {
         }
         if (loyalty.isPresent()) {
             builder.append(profile.isPresent() ? "&" : "?");
-            builder.append("group=").append(loyalty.get().getGroup().toString().toLowerCase()).
-                    append("&points=").append(loyalty.get().getPoints());
+            builder.append("loyalty=").append(loyalty.get().getGroup().toString().toLowerCase());
         }
         return builder.toString();
     }

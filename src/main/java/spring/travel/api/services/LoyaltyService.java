@@ -21,6 +21,7 @@ import spring.travel.api.compose.AsyncTask;
 import spring.travel.api.compose.ImmediatelyNoneAsyncTaskAdapter;
 import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
 import spring.travel.api.model.Loyalty;
+import spring.travel.api.model.User;
 
 import java.util.Optional;
 
@@ -35,10 +36,10 @@ public class LoyaltyService {
         this.url = url;
     }
 
-    public AsyncTask<Loyalty> loyalty(Optional<String> id) {
-        if (id.isPresent()) {
+    public AsyncTask<Loyalty> loyalty(Optional<User> user) {
+        if (user.isPresent()) {
             return new ListenableFutureAsyncTaskAdapter<>(
-                () -> asyncRestTemplate.getForEntity(url + "/" + id.get(), Loyalty.class)
+                () -> asyncRestTemplate.getForEntity(url + "/" + user.get().getId(), Loyalty.class)
             );
         } else {
             return new ImmediatelyNoneAsyncTaskAdapter();
