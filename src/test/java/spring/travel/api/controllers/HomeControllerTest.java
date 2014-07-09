@@ -129,7 +129,6 @@ public class HomeControllerTest {
     }
 
     @Test
-    @Ignore
     public void shouldNotCallProfileAndLoyaltyServicesIfNoUserIsSupplied() throws Exception {
         List<Offer> offers = Arrays.asList(
                 new Offer("Offer 1", "Blah blah", "offer1.jpg"),

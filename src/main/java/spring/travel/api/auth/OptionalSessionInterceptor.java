@@ -17,7 +17,7 @@ public class OptionalSessionInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Arrays.asList(request.getCookies()).stream().filter(
-            c -> c.getName().equalsIgnoreCase(cookieName)
+            c -> c.getName().equals(cookieName) // equalsIgnoreCase ?
         ).findFirst().ifPresent(
             c -> request.setAttribute("session", new Session(c.getValue()))
         );

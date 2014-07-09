@@ -21,7 +21,7 @@ public class CookieEncoder {
         ).collect(Collectors.joining("&"));
 
         String signature = signer.sign(encoded);
-        return cookieName + "=\"" + signature + "-" + encoded + "\"";
+        return cookieName + "=" + signature + "-" + encoded;
     }
 
     private String urlEncode(String arg) {

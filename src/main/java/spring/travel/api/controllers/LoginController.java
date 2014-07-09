@@ -28,8 +28,8 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-//    @Autowired
-//    private PlaySessionCookieBaker cookieBaker;
+    @Autowired
+    private PlaySessionCookieBaker cookieBaker;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -59,14 +59,13 @@ public class LoginController {
 
     private ResponseEntity<User> success(User user) throws AuthException {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "GETAWAY_SESSION=" + cookie(user) + "; path=/");
+        headers.add("Set-Cookie", cookie(user) + "; path=/");
         return new ResponseEntity<>(user, headers, HttpStatus.OK);
     }
 
     private String cookie(User user) throws AuthException {
         Map<String, String> values = new HashMap<>();
         values.put("id", user.getId());
-//        return cookieBaker.encode(values);
-        return user.getId();
+        return cookieBaker.encode(values);
     }
 }

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
@@ -28,6 +29,14 @@ public class WireMockSupport {
 
     public static void stubGet(String url, Object response) throws Exception {
         stubFor(WireMock.get(urlEqualTo(url)).
+            willReturn(aResponse().
+                withHeader("Content-Type", "application/json").
+                withBody(mapper.writeValueAsString(response))));
+    }
+
+    public static void stubPost(String url, Object body, Object response) throws Exception {
+        stubFor(WireMock.post(urlEqualTo(url)).
+            withRequestBody(equalToJson(mapper.writeValueAsString(body))).
             willReturn(aResponse().
                 withHeader("Content-Type", "application/json").
                 withBody(mapper.writeValueAsString(response))));
