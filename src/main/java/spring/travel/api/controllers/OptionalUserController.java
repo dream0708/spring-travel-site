@@ -1,5 +1,7 @@
 package spring.travel.api.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.async.DeferredResult;
 import spring.travel.api.auth.AuthException;
@@ -11,6 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class OptionalUserController {
+
+    private Logger logger = LoggerFactory.getLogger(OptionalUserController.class);
 
     @Autowired
     private UserService userService;
@@ -38,7 +42,7 @@ public class OptionalUserController {
                 (user) -> action.execute(result, user)
             ).execute();
         } catch (AuthException ae) {
-            ae.printStackTrace();
+            logger.warn("Error trying to decode session cookie [%s]", session, ae);
             action.execute(result, Optional.empty());
         }
     }
