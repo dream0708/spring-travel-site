@@ -109,7 +109,7 @@ public class HomeControllerTest {
 
         when(mockVerifier.verify(encoded, signature)).thenReturn(true);
 
-        MvcResult mvcResult = this.mockMvc.perform(get("/home").
+        MvcResult mvcResult = this.mockMvc.perform(get("/").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8")).
             cookie(cookie)).
             andExpect(status().isOk()).
@@ -138,7 +138,7 @@ public class HomeControllerTest {
 
         stubGet("/offers", offers);
 
-        MvcResult mvcResult = this.mockMvc.perform(get("/home").
+        MvcResult mvcResult = this.mockMvc.perform(get("/").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
             andExpect(status().isOk()).
             andExpect(request().asyncStarted()).

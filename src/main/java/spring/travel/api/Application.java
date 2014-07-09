@@ -130,7 +130,7 @@ public class Application {
     }
 
     @Bean
-    public AsyncHandlerInterceptor optionalUserInterceptor() {
+    public AsyncHandlerInterceptor optionalSessionInterceptor() {
         return new OptionalSessionInterceptor(cookieName);
     }
 
@@ -139,7 +139,7 @@ public class Application {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(optionalUserInterceptor());
+                registry.addInterceptor(optionalSessionInterceptor());
             }
             @Override
             public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {

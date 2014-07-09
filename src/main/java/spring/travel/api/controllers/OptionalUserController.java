@@ -19,25 +19,31 @@ public class OptionalUserController {
     private PlaySessionCookieBaker cookieBaker;
 
     <T> DeferredResult<T> withOptionalUser(Optional<Session> session, OptionalUserAction<T> action) {
-
         DeferredResult<T> result = new DeferredResult<>();
 
         if (session.isPresent()) {
-            Session s = session.get();
-            try {
-                Map<String,String> sessionVariables = cookieBaker.decode(s.getValue());
-                Optional<String> userId = Optional.ofNullable(sessionVariables.get("id"));
-                userService.user(userId).onCompletion(
-                    (user) -> action.execute(result, user)
-                ).execute();
-            } catch (AuthException ae) {
-                ae.printStackTrace();
-                action.execute(result, Optional.empty());
-            }
+            withSession(session.get(), result, action);
         } else {
-            action.execute(result, Optional.empty());
+            withoutSession(result, action);
         }
 
         return result;
+    }
+
+    private <T> void withSession(Session session, DeferredResult<T> result, OptionalUserAction<T> action) {
+        try {
+            Map<String,String> sessionVariables = cookieBaker.decode(session.getValue());
+            Optional<String> userId = Optional.ofNullable(sessionVariables.get("id"));
+            userService.user(userId).onCompletion(
+                (user) -> action.execute(result, user)
+            ).execute();
+        } catch (AuthException ae) {
+            ae.printStackTrace();
+            action.execute(result, Optional.empty());
+        }
+    }
+
+    private <T> void withoutSession(DeferredResult<T> result, OptionalUserAction<T> action) {
+        action.execute(result, Optional.empty());
     }
 }

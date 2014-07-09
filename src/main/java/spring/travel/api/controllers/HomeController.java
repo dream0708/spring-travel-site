@@ -28,6 +28,7 @@ import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
+import spring.travel.api.model.User;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
 import spring.travel.api.services.ProfileService;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/home")
+@RequestMapping("/")
 public class HomeController extends OptionalUserController {
 
     @Autowired
@@ -53,20 +54,18 @@ public class HomeController extends OptionalUserController {
     @ResponseBody
     public DeferredResult<List<Offer>> home(@OptionalSession Optional<Session> session) {
         return withOptionalUser(session,
-            (result, user) -> {
-                new ParallelAsyncTask<>(
-                    profileService.profile(user),
-                    loyaltyService.loyalty(user)
-                ).onCompletion(
-                    (tuple) -> {
-                        Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
+            (result, user) -> new ParallelAsyncTask<>(
+                profileService.profile(user),
+                loyaltyService.loyalty(user)
+            ).onCompletion(
+                (tuple) -> {
+                    Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
 
-                        offersService.offers(userData.a(), userData.b()).onCompletion(
-                            (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
-                        ).execute();
-                    }
-                ).execute();
-            }
+                    offersService.offers(userData.a(), userData.b()).onCompletion(
+                        (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
+                    ).execute();
+                }
+            ).execute()
         );
     }
 }
