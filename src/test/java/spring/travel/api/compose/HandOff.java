@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.controllers;
+package spring.travel.api.compose;
 
-import spring.travel.api.model.weather.Location;
-import spring.travel.api.request.Request;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import java.util.Optional;
+public class HandOff<T> {
 
-public class GeoLocator {
+    private volatile T t;
 
-    private Location centralLondon = new Location(2643741, 51.512791, -0.091840);
+    private CountDownLatch latch = new CountDownLatch(1);
 
-    public Location locate(Request request) {
-        Optional<Location> location = request.getUser().flatMap(
-            u -> u.getAddress().map(
-                a -> a.getLocation()
-            )
-        );
+    public void put(T t) {
+        this.t = t;
+        latch.countDown();
+    }
 
-        // if no user data, try ip address
-
-        return location.orElse(centralLondon);
+    public T get(int seconds) throws InterruptedException {
+        latch.await(seconds, TimeUnit.SECONDS);
+        return t;
     }
 }

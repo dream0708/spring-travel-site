@@ -15,6 +15,11 @@
  */
 package spring.travel.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Optional;
+
 public class User {
 
     private String id;
@@ -26,17 +31,18 @@ public class User {
     private String username;
 
     // Would like this to be an Optional ... custom jackson deserializer?
-    private Address address;
+    @JsonProperty(value = "address")
+    private Address a;
 
     public User() {
     }
 
-    public User(String id, String firstName, String lastName, String username, Address address) {
+    public User(String id, String firstName, String lastName, String username, Optional<Address> address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.address = address;
+        this.a = address.orElse(null);
     }
 
     public String getId() {
@@ -71,11 +77,21 @@ public class User {
         this.username = username;
     }
 
-    public Address getAddress() {
-        return address;
+    public Address getA() {
+        return a;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setA(Address a) {
+        this.a = a;
+    }
+
+    @JsonIgnore
+    public Optional<Address> getAddress() {
+        return Optional.ofNullable(a);
+    }
+
+    @JsonIgnore
+    public void setAddress(Optional<Address> address) {
+        this.a = address.orElse(null);
     }
 }

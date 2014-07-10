@@ -1,0 +1,91 @@
+{
+    "cod": "200",
+    "message": 0.0023,
+    "city": {
+        "id": 2652546,
+        "name": "Colnbrook",
+        "coord": {
+            "lon": -0.52142,
+            "lat": 51.483841
+        },
+        "country": "GB",
+        "population": 0
+    },
+    "cnt": 3,
+    "list": [
+        {
+            "dt": 1404734400,
+            "temp": {
+                "day": 295.07,
+                "min": 285.14,
+                "max": 295.07,
+                "night": 285.14,
+                "eve": 291.93,
+                "morn": 290.63
+            },
+            "pressure": 1018.76,
+            "humidity": 68,
+            "weather": [
+                {
+                    "id": 803,
+                    "main": "Clouds",
+                    "description": "broken clouds",
+                    "icon": "04d"
+                }
+            ],
+            "speed": 3.41,
+            "deg": 202,
+            "clouds": 68
+        },
+        {
+            "dt": 1404820800,
+            "temp": {
+                "day": 293.32,
+                "min": 286.38,
+                "max": 293.41,
+                "night": 287.1,
+                "eve": 291.8,
+                "morn": 286.38
+            },
+            "pressure": 1020.36,
+            "humidity": 70,
+            "weather": [
+                {
+                    "id": 802,
+                    "main": "Clouds",
+                    "description": "scattered clouds",
+                    "icon": "03d"
+                }
+            ],
+            "speed": 2.06,
+            "deg": 300,
+            "clouds": 32
+        },
+        {
+            "dt": 1404907200,
+            "temp": {
+                "day": 292.39,
+                "min": 286.16,
+                "max": 292.39,
+                "night": 288.55,
+                "eve": 292.08,
+                "morn": 286.16
+            },
+            "pressure": 1021.44,
+            "humidity": 68,
+            "weather": [
+                {
+                    "id": 501,
+                    "main": "Rain",
+                    "description": "moderate rain",
+                    "icon": "10d"
+                }
+            ],
+            "speed": 5.36,
+            "deg": 340,
+            "clouds": 56,
+            "rain": 8
+        }
+    ]
+}
+

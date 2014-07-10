@@ -34,11 +34,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import spring.travel.api.Application;
 import spring.travel.api.auth.Signer;
+import spring.travel.api.model.Address;
 import spring.travel.api.model.LoginData;
 import spring.travel.api.model.User;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -125,7 +127,7 @@ public class LoginControllerTest {
     public void shouldSetSessionCookieIfUserLogsInSuccessfully() throws Exception {
         stubPost("/login",
             new LoginData("brubble", "bambam"),
-            new User("346436", "Barney", "Rubble", "brubble", null)
+            new User("346436", "Barney", "Rubble", "brubble", Optional.<Address>empty())
         );
 
         when(signer.sign("id=346436")).thenReturn("SIGNATURE");

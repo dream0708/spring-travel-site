@@ -35,6 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 import spring.travel.api.TestApplication;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
+import spring.travel.api.model.Address;
 import spring.travel.api.model.Gender;
 import spring.travel.api.model.Group;
 import spring.travel.api.model.LifeCycle;
@@ -47,6 +48,7 @@ import spring.travel.api.model.User;
 import javax.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.isA;
 import static org.mockito.Mockito.when;
@@ -84,7 +86,7 @@ public class HomeControllerTest {
 
     @Test
     public void shouldReturnOffersForUser() throws Exception {
-        stubGet("/user?id=123", new User("123", "Fred", "Flintstone", "freddyf", null));
+        stubGet("/user?id=123", new User("123", "Fred", "Flintstone", "freddyf", Optional.<Address>empty()));
 
         stubGet("/profile/user/123", new Profile(LifeCycle.Family, Spending.Economy, Gender.Male));
 

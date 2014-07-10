@@ -29,6 +29,17 @@ public class Address {
 
     private Location location;
 
+    public Address() {
+    }
+
+    public Address(String firstLine, String town, String postcode, String countryCode, Location location) {
+        this.firstLine = firstLine;
+        this.town = town;
+        this.postcode = postcode;
+        this.countryCode = countryCode;
+        this.location = location;
+    }
+
     public String getFirstLine() {
         return firstLine;
     }
