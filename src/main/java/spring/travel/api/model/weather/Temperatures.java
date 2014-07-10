@@ -15,25 +15,30 @@
  */
 package spring.travel.api.model.weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.math.BigDecimal;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Temperatures {
 
-    private double min;
+    private BigDecimal min;
 
-    private double max;
+    private BigDecimal max;
 
-    public double getMin() {
+    public BigDecimal getMin() {
         return min;
     }
 
-    public void setMin(double min) {
+    public void setMin(BigDecimal min) {
         this.min = min;
     }
 
-    public double getMax() {
+    public BigDecimal getMax() {
         return max;
     }
 
-    public void setMax(double max) {
+    public void setMax(BigDecimal max) {
         this.max = max;
     }
 }

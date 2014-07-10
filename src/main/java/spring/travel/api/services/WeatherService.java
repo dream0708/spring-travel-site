@@ -17,6 +17,10 @@ package spring.travel.api.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.AsyncRestTemplate;
+import spring.travel.api.compose.AsyncTask;
+import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
+import spring.travel.api.model.weather.DailyForecast;
+import spring.travel.api.model.weather.Location;
 
 public class WeatherService {
 
@@ -27,5 +31,12 @@ public class WeatherService {
 
     public WeatherService(String url) {
         this.url = url;
+    }
+
+    public AsyncTask<DailyForecast> forecast(Location location, int numberOfDays) {
+        String queryString = "?id=" + location.getCityId() + "&cnt=" + numberOfDays + "&mode=json";
+        return new ListenableFutureAsyncTaskAdapter<>(
+            () -> asyncRestTemplate.getForEntity(url + queryString, DailyForecast.class)
+        );
     }
 }

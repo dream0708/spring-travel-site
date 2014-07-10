@@ -15,6 +15,9 @@
  */
 package spring.travel.api.model.weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class City {
 
     private int id;

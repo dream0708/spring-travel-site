@@ -15,12 +15,19 @@
  */
 package spring.travel.api.model.weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DailyForecast {
 
     private City city;
 
+    @JsonProperty("list")
+    @JsonDeserialize(contentAs = Forecast.class)
     private List<Forecast> forecasts;
 
     public City getCity() {

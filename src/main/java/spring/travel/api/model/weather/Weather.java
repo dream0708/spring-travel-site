@@ -15,11 +15,14 @@
  */
 package spring.travel.api.model.weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Weather {
 
     private String main;
 
-    private String desription;
+    private String description;
 
     private String icon;
 
@@ -31,12 +34,12 @@ public class Weather {
         this.main = main;
     }
 
-    public String getDesription() {
-        return desription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getIcon() {

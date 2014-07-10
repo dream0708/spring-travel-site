@@ -15,55 +15,65 @@
  */
 package spring.travel.api.model.weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.math.BigDecimal;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Forecast {
 
-    private long dt;
+    @JsonProperty(value="dt")
+    private long date;
 
-    private Temperatures temp;
+    @JsonProperty(value="temp")
+    private Temperatures temperatures;
 
-    private Weather weather;
+    private Weather[] weather;
 
-    private double speed;
+    @JsonProperty(value="speed")
+    private BigDecimal windSpeed;
 
-    private double deg;
+    @JsonProperty(value="deg")
+    private BigDecimal windDirection;
 
-    public long getDt() {
-        return dt;
+    public long getDate() {
+        return date;
     }
 
-    public void setDt(long dt) {
-        this.dt = dt;
+    public void setDate(long date) {
+        this.date = date;
     }
 
-    public Temperatures getTemp() {
-        return temp;
+    public Temperatures getTemperatures() {
+        return temperatures;
     }
 
-    public void setTemp(Temperatures temp) {
-        this.temp = temp;
+    public void setTemperatures(Temperatures temp) {
+        this.temperatures = temp;
     }
 
-    public Weather getWeather() {
+    public Weather[] getWeather() {
         return weather;
     }
 
-    public void setWeather(Weather weather) {
+    public void setWeather(Weather[] weather) {
         this.weather = weather;
     }
 
-    public double getSpeed() {
-        return speed;
+    public BigDecimal getWindSpeed() {
+        return windSpeed;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public void setWindSpeed(BigDecimal windSpeed) {
+        this.windSpeed = windSpeed;
     }
 
-    public double getDeg() {
-        return deg;
+    public BigDecimal getWindDirection() {
+        return windDirection;
     }
 
-    public void setDeg(double deg) {
-        this.deg = deg;
+    public void setWindDirection(BigDecimal windDirection) {
+        this.windDirection = windDirection;
     }
 }

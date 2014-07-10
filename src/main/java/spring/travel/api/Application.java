@@ -33,6 +33,7 @@ import spring.travel.api.auth.CookieEncoder;
 import spring.travel.api.auth.PlaySessionCookieBaker;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
+import spring.travel.api.model.weather.Weather;
 import spring.travel.api.request.RequestInfoInterceptor;
 import spring.travel.api.request.RequestInfoResolver;
 import spring.travel.api.services.LoginService;
@@ -40,6 +41,7 @@ import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
 import spring.travel.api.services.ProfileService;
 import spring.travel.api.services.UserService;
+import spring.travel.api.services.WeatherService;
 
 import java.util.List;
 
@@ -53,49 +55,57 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Value("${profile.service.url}")
-    private String profileServiceUrl;
-
-    @Value("${loyalty.service.url}")
-    private String loyaltyServiceUrl;
-
-    @Value("${offers.service.url}")
-    private String offersServiceUrl;
-
-    @Value("${login.service.url}")
-    private String loginServiceUrl;
-
-    @Value("${user.service.url}")
-    private String userServiceUrl;
-
     @Bean
     public AsyncRestTemplate asyncRestTemplate() {
         return new AsyncRestTemplate();
     }
+
+    @Value("${profile.service.url}")
+    private String profileServiceUrl;
 
     @Bean
     public ProfileService profileService() {
         return new ProfileService(profileServiceUrl);
     }
 
+    @Value("${loyalty.service.url}")
+    private String loyaltyServiceUrl;
+
     @Bean
     public LoyaltyService loyaltyService() {
         return new LoyaltyService(loyaltyServiceUrl);
     }
+
+    @Value("${offers.service.url}")
+    private String offersServiceUrl;
 
     @Bean
     public OffersService offersService() {
         return new OffersService(offersServiceUrl);
     }
 
+    @Value("${login.service.url}")
+    private String loginServiceUrl;
+
     @Bean
     public LoginService loginService() {
         return new LoginService(loginServiceUrl);
     }
 
+    @Value("${user.service.url}")
+    private String userServiceUrl;
+
     @Bean
     public UserService userService() {
         return new UserService(userServiceUrl);
+    }
+
+    @Value("${weather.service.url}")
+    private String weatherServiceUrl;
+
+    @Bean
+    public WeatherService weatherService() {
+        return new WeatherService(weatherServiceUrl);
     }
 
     @Value("${application.secret}")

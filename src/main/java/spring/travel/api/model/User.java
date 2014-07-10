@@ -25,6 +25,7 @@ public class User {
 
     private String username;
 
+    // Would like this to be an Optional ... custom jackson deserializer?
     private Address address;
 
     public User() {

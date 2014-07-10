@@ -15,6 +15,8 @@
  */
 package spring.travel.api.model;
 
+import spring.travel.api.model.weather.Location;
+
 public class Address {
 
     private String firstLine;
