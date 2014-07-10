@@ -37,12 +37,12 @@ public class LoyaltyService {
     }
 
     public AsyncTask<Loyalty> loyalty(Optional<User> user) {
-        if (user.isPresent()) {
-            return new ListenableFutureAsyncTaskAdapter<>(
+        return user.<AsyncTask<Loyalty>>map(
+            u -> new ListenableFutureAsyncTaskAdapter<Loyalty>(
                 () -> asyncRestTemplate.getForEntity(url + "/" + user.get().getId(), Loyalty.class)
-            );
-        } else {
-            return new ImmediatelyNoneAsyncTaskAdapter();
-        }
+            )
+        ).orElse(
+            new ImmediatelyNoneAsyncTaskAdapter()
+        );
     }
 }

@@ -37,12 +37,12 @@ public class ProfileService {
     }
 
     public AsyncTask<Profile> profile(Optional<User> user) {
-        if (user.isPresent()) {
-            return new ListenableFutureAsyncTaskAdapter<>(
-                () -> asyncRestTemplate.getForEntity(url + "/" + user.get().getId(), Profile.class)
-            );
-        } else {
-            return new ImmediatelyNoneAsyncTaskAdapter();
-        }
+        return user.<AsyncTask<Profile>>map(
+            u -> new ListenableFutureAsyncTaskAdapter<Profile>(
+                () -> asyncRestTemplate.getForEntity(url + "/" + u.getId(), Profile.class)
+            )
+        ).orElse(
+            new ImmediatelyNoneAsyncTaskAdapter()
+        );
     }
 }
