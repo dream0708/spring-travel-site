@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import spring.travel.api.compose.ParallelAsyncTask;
-import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
@@ -35,6 +34,8 @@ import spring.travel.api.services.ProfileService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static spring.travel.api.compose.Tasks.parallel;
 
 @RestController
 @RequestMapping("/")
@@ -53,14 +54,14 @@ public class HomeController extends OptionalUserController {
     @ResponseBody
     public DeferredResult<List<Offer>> home(@RequestInfo Request requestInfo) {
         return withOptionalUser(requestInfo,
-            (request, response) -> new ParallelAsyncTask<>(
+            (request, response) -> parallel(
                 profileService.profile(request.getUser()),
                 loyaltyService.loyalty(request.getUser())
             ).onCompletion(
-                (tuple) -> {
-                    Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
-
-                    offersService.offers(userData.a(), userData.b()).onCompletion(
+                (result) -> {
+                    Optional<Profile> profile = result.flatMap(t -> t.a());
+                    Optional<Loyalty> loyalty = result.flatMap(t -> t.b());
+                    offersService.offers(profile, loyalty).onCompletion(
                         (offers) -> response.setResult(offers.orElse(Collections.emptyList()))
                     ).execute();
                 }
