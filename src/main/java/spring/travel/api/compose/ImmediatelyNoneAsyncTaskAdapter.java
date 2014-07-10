@@ -17,7 +17,7 @@ package spring.travel.api.compose;
 
 import java.util.Optional;
 
-public class ImmediatelyNoneAsyncTaskAdapter<T> implements AsyncTask<T> {
+public class ImmediatelyNoneAsyncTaskAdapter<T> implements AsyncTask<T>, Executable {
 
     private CompletionHandler<Optional<T>> completionHandler;
 
@@ -27,7 +27,7 @@ public class ImmediatelyNoneAsyncTaskAdapter<T> implements AsyncTask<T> {
     }
 
     @Override
-    public AsyncTask<T> onCompletion(CompletionHandler<Optional<T>> completionHandler) {
+    public Executable onCompletion(CompletionHandler<Optional<T>> completionHandler) {
         this.completionHandler = completionHandler;
         return this;
     }

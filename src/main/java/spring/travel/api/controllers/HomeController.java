@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import spring.travel.api.compose.ParallelAsyncTask;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;

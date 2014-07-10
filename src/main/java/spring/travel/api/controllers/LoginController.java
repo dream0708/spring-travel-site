@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import spring.travel.api.auth.AuthException;
 import spring.travel.api.auth.PlaySessionCookieBaker;
+import spring.travel.api.compose.Executable;
 import spring.travel.api.model.LoginData;
 import spring.travel.api.model.User;
 import spring.travel.api.services.LoginService;

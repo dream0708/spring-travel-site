@@ -17,7 +17,7 @@ package spring.travel.api.compose;
 
 import java.util.Optional;
 
-public class ParallelAsyncTask<A, B> implements AsyncTask<Tuple2<Optional<A>, Optional<B>>> {
+public class ParallelAsyncTask<A, B> implements AsyncTask<Tuple2<Optional<A>, Optional<B>>>, Executable {
 
     private final AsyncTask<A> asyncA;
 
@@ -40,7 +40,7 @@ public class ParallelAsyncTask<A, B> implements AsyncTask<Tuple2<Optional<A>, Op
     }
 
     @Override
-    public AsyncTask<Tuple2<Optional<A>, Optional<B>>> onCompletion(CompletionHandler<Optional<Tuple2<Optional<A>, Optional<B>>>> completionHandler) {
+    public Executable onCompletion(CompletionHandler<Optional<Tuple2<Optional<A>, Optional<B>>>> completionHandler) {
         this.completionHandler = completionHandler;
         return this;
     }

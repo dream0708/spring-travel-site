@@ -15,9 +15,7 @@
  */
 package spring.travel.api.compose;
 
-import java.util.Optional;
+public interface Executable {
 
-public interface AsyncTask<T> {
-
-    Executable onCompletion(CompletionHandler<Optional<T>> completionHandler);
+    void execute();
 }
