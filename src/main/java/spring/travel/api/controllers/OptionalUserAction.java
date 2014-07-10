@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api;
+package spring.travel.api.controllers;
 
-import org.mockito.Mockito;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import spring.travel.api.auth.Signer;
-import spring.travel.api.auth.Verifier;
+import org.springframework.web.context.request.async.DeferredResult;
+import spring.travel.api.request.Request;
 
-@Configuration
-@Import(Application.class)
-public class TestApplication {
+@FunctionalInterface
+public interface OptionalUserAction<T> {
 
-    @Bean
-    public Signer signer() {
-        return Mockito.mock(Signer.class);
-    }
-
-    @Bean
-    public Verifier verifier() {
-        return Mockito.mock(Verifier.class);
-    }
+    void execute(Request request, DeferredResult<T> response);
 }

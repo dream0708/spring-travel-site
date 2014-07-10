@@ -26,18 +26,19 @@ import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
+import spring.travel.api.request.Request;
+import spring.travel.api.request.RequestInfo;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
 import spring.travel.api.services.ProfileService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
-public class HomeController extends RemoteUserController {
+public class HomeController extends OptionalUserController {
 
     @Autowired
     private ProfileService profileService;
@@ -50,17 +51,17 @@ public class HomeController extends RemoteUserController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<List<Offer>> home(HttpServletRequest request) {
-        return withRemoteUser(request,
-            (result, remoteUser) -> new ParallelAsyncTask<>(
-                profileService.profile(remoteUser.getUser()),
-                loyaltyService.loyalty(remoteUser.getUser())
+    public DeferredResult<List<Offer>> home(@RequestInfo Request requestInfo) {
+        return withOptionalUser(requestInfo,
+            (request, response) -> new ParallelAsyncTask<>(
+                profileService.profile(request.getUser()),
+                loyaltyService.loyalty(request.getUser())
             ).onCompletion(
                 (tuple) -> {
                     Tuple2<Optional<Profile>, Optional<Loyalty>> userData = tuple.orElse(Tuple2.empty());
 
                     offersService.offers(userData.a(), userData.b()).onCompletion(
-                        (offers) -> result.setResult(offers.orElse(Collections.emptyList()))
+                        (offers) -> response.setResult(offers.orElse(Collections.emptyList()))
                     ).execute();
                 }
             ).execute()

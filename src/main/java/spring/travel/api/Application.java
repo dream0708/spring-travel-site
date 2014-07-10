@@ -23,16 +23,25 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import spring.travel.api.auth.CookieDecoder;
 import spring.travel.api.auth.CookieEncoder;
 import spring.travel.api.auth.PlaySessionCookieBaker;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
+import spring.travel.api.request.RequestInfoInterceptor;
+import spring.travel.api.request.RequestInfoResolver;
 import spring.travel.api.services.LoginService;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
 import spring.travel.api.services.ProfileService;
 import spring.travel.api.services.UserService;
+
+import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
@@ -92,7 +101,7 @@ public class Application {
     @Value("${application.secret}")
     private String applicationSecret;
 
-    @Value("${session.cookieName}")
+    @Value("${session.cookieName:GETAWAY_SESSION}")
     private String cookieName;
 
     @Bean
@@ -118,5 +127,27 @@ public class Application {
     @Bean
     public PlaySessionCookieBaker playSessionCookieBaker() {
         return new PlaySessionCookieBaker(cookieEncoder(), cookieDecoder());
+    }
+
+    @Value("${request.attributeName:REQUEST-INFO}")
+    private String requestAttributeName;
+
+    @Bean
+    public AsyncHandlerInterceptor requestInfoInterceptor() {
+        return new RequestInfoInterceptor(cookieName, requestAttributeName);
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(requestInfoInterceptor());
+            }
+            @Override
+            public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+                argumentResolvers.add(new RequestInfoResolver());
+            }
+        };
     }
 }

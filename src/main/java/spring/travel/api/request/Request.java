@@ -13,37 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.model.weather;
+package spring.travel.api.request;
 
-public class Weather {
+import spring.travel.api.model.User;
 
-    private String main;
+import java.util.Optional;
 
-    private String desription;
+public class Request {
 
-    private String icon;
+    Optional<User> user;
 
-    public String getMain() {
-        return main;
+    Optional<String> cookieValue;
+
+    String remoteAddress;
+
+    public Request(Optional<User> user, Optional<String> cookieValue, String remoteAddress) {
+        this.user = user;
+        this.cookieValue = cookieValue;
+        this.remoteAddress = remoteAddress;
     }
 
-    public void setMain(String main) {
-        this.main = main;
+    public Optional<User> getUser() {
+        return user;
     }
 
-    public String getDesription() {
-        return desription;
+    public Optional<String> getCookieValue() {
+        return cookieValue;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public String getRemoteAddress() {
+        return remoteAddress;
     }
 }

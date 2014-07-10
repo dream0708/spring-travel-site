@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api;
+package spring.travel.api.request;
 
-import org.mockito.Mockito;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import spring.travel.api.auth.Signer;
-import spring.travel.api.auth.Verifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Configuration
-@Import(Application.class)
-public class TestApplication {
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestInfo {
 
-    @Bean
-    public Signer signer() {
-        return Mockito.mock(Signer.class);
-    }
-
-    @Bean
-    public Verifier verifier() {
-        return Mockito.mock(Verifier.class);
-    }
+    String value() default "REQUEST-INFO";
 }
