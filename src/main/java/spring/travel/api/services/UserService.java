@@ -36,12 +36,12 @@ public class UserService {
     }
 
     public AsyncTask<User> user(Optional<String> id) {
-        if (id.isPresent()) {
-            return new ListenableFutureAsyncTaskAdapter<>(
-                () -> asyncRestTemplate.getForEntity(url + "?id=" + id.get(), User.class)
-            );
-        } else {
-            return new ImmediatelyNoneAsyncTaskAdapter();
-        }
+        return id.<AsyncTask<User>>map(
+            i -> new ListenableFutureAsyncTaskAdapter<User>(
+                () -> asyncRestTemplate.getForEntity(url + "?id=" + i, User.class)
+            )
+        ).orElse(
+            new ImmediatelyNoneAsyncTaskAdapter()
+        );
     }
 }
