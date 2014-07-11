@@ -32,16 +32,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
 import spring.travel.api.TestApplication;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
 import spring.travel.api.model.Advert;
+import spring.travel.api.model.Offer;
 import spring.travel.api.model.user.Address;
 import spring.travel.api.model.user.Gender;
 import spring.travel.api.model.user.Group;
 import spring.travel.api.model.user.LifeCycle;
 import spring.travel.api.model.user.Loyalty;
-import spring.travel.api.model.Offer;
 import spring.travel.api.model.user.Profile;
 import spring.travel.api.model.user.Spending;
 import spring.travel.api.model.user.User;
@@ -51,6 +52,7 @@ import javax.servlet.http.Cookie;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static junit.framework.Assert.assertNull;
@@ -59,7 +61,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static spring.travel.api.controllers.WireMockSupport.stubGet;
@@ -132,19 +133,28 @@ public class HomeControllerTest {
             cookie(cookie)).
             andExpect(status().isOk()).
             andExpect(request().asyncStarted()).
-            andExpect(request().asyncResult(isA(HomePage.class))).
+            andExpect(request().asyncResult(isA(ModelAndView.class))).
             andReturn();
 
 
         this.mockMvc.perform(asyncDispatch(mvcResult)).
             andExpect(status().isOk());
 
-        HomePage homePage = (HomePage)mvcResult.getAsyncResult(1000);
+        ModelAndView modelAndView = (ModelAndView)mvcResult.getAsyncResult(1000);
 
-        assertEquals("Fred", homePage.getUser().getFirstName());
-        assertEquals("Offer 1", homePage.getOffers().get(0).getTitle());
-        assertEquals("Advert 1", homePage.getAdverts().get(0).getTitle());
-        assertEquals(2652546, homePage.getDailyForecast().getCity().getId());
+        Map<String,Object> model = modelAndView.getModel();
+
+        User user = (User)model.get("user");
+        assertEquals("Fred", user.getFirstName());
+
+        List<Offer> modelOffers = (List<Offer>)model.get("offers");
+        assertEquals("Offer 1", modelOffers.get(0).getTitle());
+
+        List<Advert> modelAdverts = (List<Advert>)model.get("adverts");
+        assertEquals("Advert 1", modelAdverts.get(0).getTitle());
+
+        DailyForecast modelForecast = (DailyForecast)model.get("forecast");
+        assertEquals(2652546, modelForecast.getCity().getId());
     }
 
     @Test
@@ -171,19 +181,27 @@ public class HomeControllerTest {
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
             andExpect(status().isOk()).
             andExpect(request().asyncStarted()).
-            andExpect(request().asyncResult(isA(HomePage.class))).
+            andExpect(request().asyncResult(isA(ModelAndView.class))).
             andReturn();
 
 
         this.mockMvc.perform(asyncDispatch(mvcResult)).
             andExpect(status().isOk());
 
-        HomePage homePage = (HomePage)mvcResult.getAsyncResult(1000);
+        ModelAndView modelAndView = (ModelAndView)mvcResult.getAsyncResult(1000);
 
-        assertNull(homePage.getUser());
-        assertEquals("Offer 1", homePage.getOffers().get(0).getTitle());
-        assertEquals("Advert 1", homePage.getAdverts().get(0).getTitle());
-        assertEquals(2652546, homePage.getDailyForecast().getCity().getId());
+        Map<String,Object> model = modelAndView.getModel();
+
+        assertNull(model.get("user"));
+
+        List<Offer> modelOffers = (List<Offer>)model.get("offers");
+        assertEquals("Offer 1", modelOffers.get(0).getTitle());
+
+        List<Advert> modelAdverts = (List<Advert>)model.get("adverts");
+        assertEquals("Advert 1", modelAdverts.get(0).getTitle());
+
+        DailyForecast modelForecast = (DailyForecast)model.get("forecast");
+        assertEquals(2652546, modelForecast.getCity().getId());
     }
 
     private void stubWeather(String url) throws Exception {

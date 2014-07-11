@@ -21,13 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.ModelAndView;
 import spring.travel.api.compose.AsyncTask;
 import spring.travel.api.compose.ParallelCollector;
 import spring.travel.api.compose.Tuple2;
 import spring.travel.api.model.Advert;
-import spring.travel.api.model.user.Loyalty;
 import spring.travel.api.model.Offer;
+import spring.travel.api.model.user.Loyalty;
 import spring.travel.api.model.user.Profile;
+import spring.travel.api.model.user.User;
 import spring.travel.api.model.weather.DailyForecast;
 import spring.travel.api.model.weather.Location;
 import spring.travel.api.request.Request;
@@ -39,7 +41,9 @@ import spring.travel.api.services.ProfileService;
 import spring.travel.api.services.WeatherService;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static spring.travel.api.compose.Tasks.parallel;
@@ -68,7 +72,7 @@ public class HomeController extends OptionalUserController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<HomePage> home(@RequestInfo Request requestInfo) {
+    public DeferredResult<ModelAndView> home(@RequestInfo Request requestInfo) {
         return withOptionalUser(requestInfo,
             (request, response) -> {
 
@@ -81,12 +85,8 @@ public class HomeController extends OptionalUserController {
                             List<Advert> adverts = adsOffers.flatMap(ao -> ao.a()).orElse(Collections.emptyList());
                             List<Offer> offers = adsOffers.flatMap(ao -> ao.b()).orElse(Collections.emptyList());
 
-                            response.setResult(new HomePage(
-                                request.getUser().orElse(null),
-                                offers,
-                                forecast.orElse(null),
-                                adverts
-                            ));
+                            Map<String, ?> map = homePageModel(request.getUser(), offers, forecast, adverts);
+                            response.setResult(new ModelAndView("home", map));
                         }
                     );
 
@@ -113,5 +113,15 @@ public class HomeController extends OptionalUserController {
                 ).execute();
             }
         );
+    }
+
+    private Map<String, ?> homePageModel(Optional<User> user, List<Offer> offers,
+                                         Optional<DailyForecast> forecast, List<Advert> adverts) {
+        Map<String, Object> map = new HashMap<>();
+        user.ifPresent(u -> map.put("user", u));
+        map.put("offers", offers);
+        forecast.ifPresent(f -> map.put("forecast", f));
+        map.put("adverts", adverts);
+        return map;
     }
 }
