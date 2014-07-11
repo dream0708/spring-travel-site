@@ -17,9 +17,12 @@ package spring.travel.api.request;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class RequestInfoInterceptor extends HandlerInterceptorAdapter {
@@ -34,7 +37,12 @@ public class RequestInfoInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Optional<String> cookie = Arrays.asList(request.getCookies()).stream().filter(
+        List<Cookie> cookies = Optional.ofNullable(request.getCookies()).map(
+            c -> Arrays.asList(c)
+        ).orElse(
+            Collections.emptyList()
+        );
+        Optional<String> cookie = cookies.stream().filter(
             c -> c.getName().equals(cookieName) // equalsIgnoreCase ?
         ).findFirst().map(c -> c.getValue());
 

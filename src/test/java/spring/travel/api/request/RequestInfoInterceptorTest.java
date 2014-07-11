@@ -63,6 +63,20 @@ public class RequestInfoInterceptorTest {
     }
 
     @Test
+    public void shouldSetRequestInfoAttributeWithIpAddressIfRequestCookiesAreNull() throws Exception {
+        when(request.getCookies()).thenReturn(null);
+
+        assertTrue(interceptor.preHandle(request, response, new Object()));
+
+        verify(request, times(1)).setAttribute(eq(attributeName), requestCaptor.capture());
+        Request requestInfo = requestCaptor.getValue();
+
+        assertEquals(Optional.empty(), requestInfo.getCookieValue());
+        assertEquals(ipAddress, requestInfo.getRemoteAddress());
+        assertEquals(Optional.empty(), requestInfo.getUser());
+    }
+
+    @Test
     public void shouldSetRequestInfoAttributeWithIpAddressIfNoCookiePresent() throws Exception {
         Cookie[] cookies = new Cookie[0];
         when(request.getCookies()).thenReturn(cookies);
