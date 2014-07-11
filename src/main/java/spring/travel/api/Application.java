@@ -33,9 +33,11 @@ import spring.travel.api.auth.CookieEncoder;
 import spring.travel.api.auth.PlaySessionCookieBaker;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
+import spring.travel.api.controllers.GeoLocator;
 import spring.travel.api.model.weather.Weather;
 import spring.travel.api.request.RequestInfoInterceptor;
 import spring.travel.api.request.RequestInfoResolver;
+import spring.travel.api.services.AdvertService;
 import spring.travel.api.services.LoginService;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
@@ -106,6 +108,19 @@ public class Application {
     @Bean
     public WeatherService weatherService() {
         return new WeatherService(weatherServiceUrl);
+    }
+
+    @Value("${advert.service.url}")
+    private String advertServiceUrl;
+
+    @Bean
+    public AdvertService advertService() {
+        return new AdvertService(advertServiceUrl);
+    }
+
+    @Bean
+    public GeoLocator geoLocator() {
+        return new GeoLocator();
     }
 
     @Value("${application.secret}")

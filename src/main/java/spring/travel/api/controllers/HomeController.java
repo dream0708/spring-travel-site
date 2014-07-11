@@ -21,14 +21,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import spring.travel.api.compose.AsyncTask;
+import spring.travel.api.compose.ParallelCollector;
+import spring.travel.api.compose.Tuple2;
+import spring.travel.api.model.Advert;
 import spring.travel.api.model.Loyalty;
 import spring.travel.api.model.Offer;
 import spring.travel.api.model.Profile;
+import spring.travel.api.model.weather.DailyForecast;
+import spring.travel.api.model.weather.Location;
 import spring.travel.api.request.Request;
 import spring.travel.api.request.RequestInfo;
+import spring.travel.api.services.AdvertService;
 import spring.travel.api.services.LoyaltyService;
 import spring.travel.api.services.OffersService;
 import spring.travel.api.services.ProfileService;
+import spring.travel.api.services.WeatherService;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,22 +57,61 @@ public class HomeController extends OptionalUserController {
     @Autowired
     private OffersService offersService;
 
+    @Autowired
+    private WeatherService weatherService;
+
+    @Autowired
+    private AdvertService advertService;
+
+    @Autowired
+    private GeoLocator geoLocator;
+
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<List<Offer>> home(@RequestInfo Request requestInfo) {
+    public DeferredResult<HomePage> home(@RequestInfo Request requestInfo) {
         return withOptionalUser(requestInfo,
-            (request, response) -> parallel(
-                profileService.profile(request.getUser()),
-                loyaltyService.loyalty(request.getUser())
-            ).onCompletion(
-                (result) -> {
-                    Optional<Profile> profile = result.flatMap(t -> t.a());
-                    Optional<Loyalty> loyalty = result.flatMap(t -> t.b());
-                    offersService.offers(profile, loyalty).onCompletion(
-                        (offers) -> response.setResult(offers.orElse(Collections.emptyList()))
-                    ).execute();
-                }
-            ).execute()
+            (request, response) -> {
+
+                ParallelCollector<DailyForecast, Tuple2<Optional<List<Advert>>, Optional<List<Offer>>>> collector =
+                    new ParallelCollector<>(
+                        (result) -> {
+                            Optional<DailyForecast> forecast = result.a();
+
+                            Optional<Tuple2<Optional<List<Advert>>, Optional<List<Offer>>>> adsOffers = result.b();
+                            List<Advert> adverts = adsOffers.flatMap(ao -> ao.a()).orElse(Collections.emptyList());
+                            List<Offer> offers = adsOffers.flatMap(ao -> ao.b()).orElse(Collections.emptyList());
+
+                            response.setResult(new HomePage(
+                                request.getUser().orElse(null),
+                                offers,
+                                forecast.orElse(null),
+                                adverts
+                            ));
+                        }
+                    );
+
+                Location location = geoLocator.locate(request);
+                AsyncTask<DailyForecast> forecast = weatherService.forecast(location, 5);
+                forecast.onCompletion(
+                    df -> collector.updateA(df)
+                ).execute();
+
+                parallel(
+                    profileService.profile(request.getUser()),
+                    loyaltyService.loyalty(request.getUser())
+                ).onCompletion(
+                    profileLoyalty -> {
+                        Optional<Profile> profile = profileLoyalty.flatMap(t -> t.a());
+                        Optional<Loyalty> loyalty = profileLoyalty.flatMap(t -> t.b());
+                        parallel(
+                            advertService.advert(4, profile),
+                            offersService.offers(profile, loyalty)
+                        ).onCompletion(
+                            adsOffers -> collector.updateB(adsOffers)
+                        ).execute();
+                    }
+                ).execute();
+            }
         );
     }
 }
