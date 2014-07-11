@@ -34,9 +34,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import spring.travel.api.Application;
 import spring.travel.api.auth.Signer;
-import spring.travel.api.model.Address;
+import spring.travel.api.model.user.Address;
 import spring.travel.api.model.LoginData;
-import spring.travel.api.model.User;
+import spring.travel.api.model.user.User;
 
 import java.util.Arrays;
 import java.util.List;

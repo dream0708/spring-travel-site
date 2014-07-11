@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.model;
+package spring.travel.api.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import spring.travel.api.model.user.Address;
 
 import java.util.Optional;
 

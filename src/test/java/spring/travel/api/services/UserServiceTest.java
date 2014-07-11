@@ -22,8 +22,8 @@ import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.compose.HandOff;
-import spring.travel.api.model.Address;
-import spring.travel.api.model.User;
+import spring.travel.api.model.user.Address;
+import spring.travel.api.model.user.User;
 import spring.travel.api.model.weather.Location;
 
 import java.util.Optional;

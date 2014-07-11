@@ -17,7 +17,7 @@ package spring.travel.api.controllers;
 
 import spring.travel.api.model.Advert;
 import spring.travel.api.model.Offer;
-import spring.travel.api.model.User;
+import spring.travel.api.model.user.User;
 import spring.travel.api.model.weather.DailyForecast;
 
 import java.util.List;

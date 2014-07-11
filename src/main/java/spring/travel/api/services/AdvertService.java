@@ -22,7 +22,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.compose.AsyncTask;
 import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
 import spring.travel.api.model.Advert;
-import spring.travel.api.model.Profile;
+import spring.travel.api.model.user.Profile;
 
 import java.util.List;
 import java.util.Optional;

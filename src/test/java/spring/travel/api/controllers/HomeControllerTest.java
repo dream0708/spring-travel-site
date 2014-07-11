@@ -15,9 +15,9 @@
  */
 package spring.travel.api.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,22 +35,27 @@ import org.springframework.web.context.WebApplicationContext;
 import spring.travel.api.TestApplication;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
-import spring.travel.api.model.Address;
-import spring.travel.api.model.Gender;
-import spring.travel.api.model.Group;
-import spring.travel.api.model.LifeCycle;
-import spring.travel.api.model.Loyalty;
+import spring.travel.api.model.Advert;
+import spring.travel.api.model.user.Address;
+import spring.travel.api.model.user.Gender;
+import spring.travel.api.model.user.Group;
+import spring.travel.api.model.user.LifeCycle;
+import spring.travel.api.model.user.Loyalty;
 import spring.travel.api.model.Offer;
-import spring.travel.api.model.Profile;
-import spring.travel.api.model.Spending;
-import spring.travel.api.model.User;
+import spring.travel.api.model.user.Profile;
+import spring.travel.api.model.user.Spending;
+import spring.travel.api.model.user.User;
+import spring.travel.api.model.weather.DailyForecast;
 
 import javax.servlet.http.Cookie;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static junit.framework.Assert.assertNull;
 import static org.hamcrest.core.Is.isA;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -85,8 +90,10 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void shouldReturnOffersForUser() throws Exception {
+    public void shouldReturnOffersForUserWithNoAddress() throws Exception {
         stubGet("/user?id=123", new User("123", "Fred", "Flintstone", "freddyf", Optional.<Address>empty()));
+
+        stubWeather("/weather?id=2643741&cnt=5&mode=json");
 
         stubGet("/profile/user/123", new Profile(LifeCycle.Family, Spending.Economy, Gender.Male));
 
@@ -99,6 +106,15 @@ public class HomeControllerTest {
         );
 
         stubGet("/offers?lifecycle=family&spending=economy&gender=male&loyalty=bronze", offers);
+
+        List<Advert> adverts = Arrays.asList(
+            new Advert("Advert 1", "advert1.jpg", "Blah blah"),
+            new Advert("Advert 2", "advert2.jpg", "Blah blah"),
+            new Advert("Advert 3", "advert3.jpg", "Blah blah"),
+            new Advert("Advert 4", "advert4.jpg", "Blah blah")
+        );
+
+        stubGet("/adverts?count=4&target=low", adverts);
 
         String signature = "0923023985092384";
         String cookieName = "GETAWAY_SESSION";
@@ -116,22 +132,25 @@ public class HomeControllerTest {
             cookie(cookie)).
             andExpect(status().isOk()).
             andExpect(request().asyncStarted()).
-            andExpect(request().asyncResult(isA(List.class))).
+            andExpect(request().asyncResult(isA(HomePage.class))).
             andReturn();
 
 
         this.mockMvc.perform(asyncDispatch(mvcResult)).
-            andExpect(status().isOk()).
-            andExpect(jsonPath("$[0].title").value("Offer 1")).
-            andExpect(jsonPath("$[0].image").value("offer1.jpg")).
-            andExpect(jsonPath("$[1].title").value("Offer 2")).
-            andExpect(jsonPath("$[1].image").value("offer2.jpg")).
-            andExpect(jsonPath("$[2].title").value("Offer 3")).
-            andExpect(jsonPath("$[2].image").value("offer3.jpg"));
+            andExpect(status().isOk());
+
+        HomePage homePage = (HomePage)mvcResult.getAsyncResult(1000);
+
+        assertEquals("Fred", homePage.getUser().getFirstName());
+        assertEquals("Offer 1", homePage.getOffers().get(0).getTitle());
+        assertEquals("Advert 1", homePage.getAdverts().get(0).getTitle());
+        assertEquals(2652546, homePage.getDailyForecast().getCity().getId());
     }
 
     @Test
     public void shouldNotCallProfileAndLoyaltyServicesIfNoUserIsSupplied() throws Exception {
+        stubWeather("/weather?id=2643741&cnt=5&mode=json");
+
         List<Offer> offers = Arrays.asList(
                 new Offer("Offer 1", "Blah blah", "offer1.jpg"),
                 new Offer("Offer 2", "Blah blah", "offer2.jpg")
@@ -139,19 +158,39 @@ public class HomeControllerTest {
 
         stubGet("/offers", offers);
 
+        List<Advert> adverts = Arrays.asList(
+            new Advert("Advert 1", "advert1.jpg", "Blah blah"),
+            new Advert("Advert 2", "advert2.jpg", "Blah blah"),
+            new Advert("Advert 3", "advert3.jpg", "Blah blah"),
+            new Advert("Advert 4", "advert4.jpg", "Blah blah")
+        );
+
+        stubGet("/adverts?count=4", adverts);
+
         MvcResult mvcResult = this.mockMvc.perform(get("/").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
             andExpect(status().isOk()).
             andExpect(request().asyncStarted()).
-            andExpect(request().asyncResult(isA(List.class))).
+            andExpect(request().asyncResult(isA(HomePage.class))).
             andReturn();
 
 
         this.mockMvc.perform(asyncDispatch(mvcResult)).
-            andExpect(status().isOk()).
-            andExpect(jsonPath("$[0].title").value("Offer 1")).
-            andExpect(jsonPath("$[0].image").value("offer1.jpg")).
-            andExpect(jsonPath("$[1].title").value("Offer 2")).
-            andExpect(jsonPath("$[1].image").value("offer2.jpg"));
+            andExpect(status().isOk());
+
+        HomePage homePage = (HomePage)mvcResult.getAsyncResult(1000);
+
+        assertNull(homePage.getUser());
+        assertEquals("Offer 1", homePage.getOffers().get(0).getTitle());
+        assertEquals("Advert 1", homePage.getAdverts().get(0).getTitle());
+        assertEquals(2652546, homePage.getDailyForecast().getCity().getId());
+    }
+
+    private void stubWeather(String url) throws Exception {
+        InputStream inputStream = getClass().getResourceAsStream("/weather-lhr-3days.json");
+        ObjectMapper mapper = new ObjectMapper();
+        DailyForecast stubData = mapper.readValue(inputStream, DailyForecast.class);
+        inputStream.close();
+        stubGet(url, stubData);
     }
 }

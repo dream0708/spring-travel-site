@@ -20,7 +20,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.compose.AsyncTask;
 import spring.travel.api.compose.ImmediatelyNoneAsyncTaskAdapter;
 import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
-import spring.travel.api.model.User;
+import spring.travel.api.model.user.User;
 
 import java.util.Optional;
 

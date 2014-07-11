@@ -13,12 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.model;
+package spring.travel.api.model.user;
 
-public enum LifeCycle {
+import spring.travel.api.model.user.Group;
 
-    Dependent,
-    PreFamily,
-    Family,
-    Late
+public class Loyalty {
+
+    private Group group;
+
+    private int points;
+
+    public Loyalty() {
+    }
+
+    public Loyalty(Group group, int points) {
+        this.group = group;
+        this.points = points;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 }

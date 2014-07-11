@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.model;
+package spring.travel.api.model.user;
+
+import spring.travel.api.model.user.Spending;
+import spring.travel.api.model.user.Gender;
+import spring.travel.api.model.user.LifeCycle;
 
 public class Profile {
 

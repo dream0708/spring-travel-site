@@ -21,9 +21,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.api.compose.AsyncTask;
 import spring.travel.api.compose.ListenableFutureAsyncTaskAdapter;
-import spring.travel.api.model.Loyalty;
+import spring.travel.api.model.user.Loyalty;
 import spring.travel.api.model.Offer;
-import spring.travel.api.model.Profile;
+import spring.travel.api.model.user.Profile;
 
 import java.util.List;
 import java.util.Optional;

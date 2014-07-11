@@ -15,7 +15,7 @@
  */
 package spring.travel.api.request;
 
-import spring.travel.api.model.User;
+import spring.travel.api.model.user.User;
 
 import java.util.Optional;
 

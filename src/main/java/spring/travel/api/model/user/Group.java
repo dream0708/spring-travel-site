@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.model;
+package spring.travel.api.model.user;
 
-public enum Gender {
+public enum Group {
 
-    Male,
-    Female
+    Bronze,
+    Silver,
+    Gold
 }
