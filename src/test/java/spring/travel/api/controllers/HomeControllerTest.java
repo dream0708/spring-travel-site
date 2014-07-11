@@ -16,8 +16,9 @@
 package spring.travel.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,8 +72,11 @@ import static spring.travel.api.controllers.WireMockSupport.stubGet;
 @ActiveProfiles("test")
 public class HomeControllerTest {
 
+    @ClassRule
+    public static WireMockClassRule wireMockRule = new WireMockClassRule(9101);
+
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(9101);
+    public WireMockClassRule instanceRule = wireMockRule;
 
     @Autowired
     private WebApplicationContext wac;
@@ -103,7 +107,8 @@ public class HomeControllerTest {
         List<Offer> offers = Arrays.asList(
             new Offer("Offer 1", "Blah blah", "offer1.jpg"),
             new Offer("Offer 2", "Blah blah", "offer2.jpg"),
-            new Offer("Offer 3", "Blah blah", "offer3.jpg")
+            new Offer("Offer 3", "Blah blah", "offer3.jpg"),
+            new Offer("Offer 4", "Blah blah", "offer4.jpg")
         );
 
         stubGet("/offers?lifecycle=family&spending=economy&gender=male&loyalty=bronze", offers);
@@ -153,7 +158,7 @@ public class HomeControllerTest {
         List<Advert> modelAdverts = (List<Advert>)model.get("adverts");
         assertEquals("Advert 1", modelAdverts.get(0).getTitle());
 
-        DailyForecast modelForecast = (DailyForecast)model.get("forecast");
+        DailyForecast modelForecast = (DailyForecast)model.get("weather");
         assertEquals(2652546, modelForecast.getCity().getId());
     }
 
@@ -162,8 +167,10 @@ public class HomeControllerTest {
         stubWeather("/weather?id=2643741&cnt=5&mode=json");
 
         List<Offer> offers = Arrays.asList(
-                new Offer("Offer 1", "Blah blah", "offer1.jpg"),
-                new Offer("Offer 2", "Blah blah", "offer2.jpg")
+            new Offer("Offer 1", "Blah blah", "offer1.jpg"),
+            new Offer("Offer 2", "Blah blah", "offer2.jpg"),
+            new Offer("Offer 3", "Blah blah", "offer3.jpg"),
+            new Offer("Offer 4", "Blah blah", "offer4.jpg")
         );
 
         stubGet("/offers", offers);
@@ -200,7 +207,7 @@ public class HomeControllerTest {
         List<Advert> modelAdverts = (List<Advert>)model.get("adverts");
         assertEquals("Advert 1", modelAdverts.get(0).getTitle());
 
-        DailyForecast modelForecast = (DailyForecast)model.get("forecast");
+        DailyForecast modelForecast = (DailyForecast)model.get("weather");
         assertEquals(2652546, modelForecast.getCity().getId());
     }
 
