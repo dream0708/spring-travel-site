@@ -22,7 +22,7 @@
     </div>
     <div id="content">
         <div id="search">
-            <form id="searchform" action="@routes.SearchController.search" method="post" name="search">
+            <form id="searchform" action="/search" method="post" name="search">
                 <fieldset>
                     <legend>Search for flights</legend>
                     <label for="leaving">Leaving from</label>

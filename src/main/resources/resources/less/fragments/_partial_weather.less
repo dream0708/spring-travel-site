@@ -1,0 +1,25 @@
+@import "_responsive_list.less";
+
+@weather-background: #4a789c;
+
+.weather {
+  padding: 2%;
+  margin-top: 0.5rem;
+  background-color: @weather-background;
+  color: #f0f0f0;
+
+  h3 {
+    font-size: 0.7rem;
+  }
+
+  .responsive-list(3);
+
+  .forecast {
+    display: block;
+
+    .date {
+      font-size: 0.6rem;
+      display: block;
+    }
+  }
+}

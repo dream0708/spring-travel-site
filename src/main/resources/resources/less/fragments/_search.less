@@ -1,0 +1,43 @@
+@search-background-color: #F0F0F0;
+
+#search {
+  padding: 2%;
+  margin-top: 0.5rem;
+  background-color: @search-background-color;
+  form {
+    legend {
+      font-weight: bold;
+    }
+    fieldset {
+      padding-top: 0.2rem;
+      @media only screen and (min-width:320px) and (max-width: 359px) {
+        padding-top: 0.3rem;
+      }
+    }
+    label {
+      display:block;
+      color: #808080;
+      font-size: 0.6rem;
+      @media only screen and (min-width:320px) and (max-width: 359px) {
+        font-size: 0.8rem;
+        padding-top: 0.15rem;
+        padding-bottom: 0.15rem;
+      }
+    }
+    input[type="text"] {
+      display:block;
+      width: 10rem;
+      @media only screen and (min-width:320px) {
+        width: 15rem;
+      }
+    }
+    input[type="date"] {
+      display:block;
+      width: 8rem;
+    }
+    input[type="submit"] {
+      margin-top: 0.5rem;
+      display:block;
+    }
+  }
+}

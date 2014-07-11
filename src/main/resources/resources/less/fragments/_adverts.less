@@ -1,0 +1,36 @@
+@import "_responsive_list.less";
+
+@adverts-background-color: #D0D0D0;
+@advert-advice-color: #707070;
+
+#adverts {
+  padding: 2%;
+  margin-top: 0.5rem;
+  background-color: @adverts-background-color;
+
+  .responsive-list;
+
+  .advert {
+    display: block;
+
+    .adverttitle {
+      display: block;
+      margin-left: 3%;
+    }
+
+    .advertimage {
+      display: block;
+      max-width: 95%;
+      margin: 0.3rem auto 0;
+      font-size: 0.7rem;
+      color: @advert-advice-color;
+    }
+  }
+
+  .advice {
+    font-size: 0.7rem;
+    color: @advert-advice-color;
+    margin-left: 3%;
+  }
+}
+

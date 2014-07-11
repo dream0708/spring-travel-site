@@ -1,0 +1,133 @@
+@page-background: #F4BA70;
+@banner-background: #85C1F5;
+@nav-background: #4a789c;
+@logo-color: #E96D63;
+@login-link-color: #F4BA70;
+@nav-color: #f0f0f0;
+@form-label-color: #808080;
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, em, img, strong, sub, sup, b, u, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead,
+tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: sans-serif;
+  font-size: 100%;
+}
+
+li {
+  list-style: none;
+}
+
+body {
+  background: @page-background;
+  @media only screen and (min-width: 720px) {
+    background: @page-background url('/images/footprints.jpg') repeat;
+  }
+  @media only screen and (max-width: 319px) {
+    font-size: 0.7rem;
+  }
+  @media only screen and (min-width:320px) and (max-width: 359px) {
+    font-size: 0.9rem;
+  }
+}
+
+#wrapper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  @media only screen and (min-width:720px) and (max-width:859px) {
+    width: 90%;
+  }
+  @media only screen and (min-width:860px) {
+    width: 80%;
+  }
+}
+
+#banner {
+  width: 100%;
+  background-color: @banner-background;
+  padding-bottom: 0.2rem;
+  @media only screen and (min-width:320px) and (max-width: 359px) {
+    padding-bottom: 0.3rem;
+  }
+  @media only screen and (min-width:360px) {
+    padding-bottom: 0.5rem;
+  }
+  @media only screen and (min-width:720px) {
+    margin-top: 2rem;
+  }
+}
+
+#logo {
+  font-family: 'Chewy', cursive;
+  font-size: 2.2rem;
+  color: @logo-color;
+  margin-left: 0.3rem;
+  @media only screen and (max-width: 319px) {
+    font-size: 1.7rem;
+  }
+  @media only screen and (min-width:320px) and (max-width: 359px) {
+    font-size: 2.2rem;
+  }
+  @media only screen and (min-width:360px) and (max-width: 479px) {
+    font-size: 2.5rem;
+  }
+}
+
+.loginlogout {
+  float: right;
+  margin-right: 1rem;
+  color: @login-link-color;
+
+  margin-top: 0.7rem;
+  @media only screen and (min-width:320px) and (max-width: 359px) {
+    margin-top: 1rem;
+  }
+  @media only screen and (min-width:360px) and (max-width: 479px) {
+    margin-top: 1.3rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: @login-link-color;
+    cursor: pointer;
+  }
+}
+
+#loginlink {
+  .loginlogout
+}
+
+#logoutlink {
+  .loginlogout
+}
+
+.nav {
+  width: 100%;
+  background-color: @nav-background;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  color: #f0f0f0;
+
+  a {
+    text-decoration: none;
+    color: #f0f0f0;
+    padding-right: 0.4rem;
+    padding-left: 0.4rem;
+  }
+}
+
+@import "fragments/_login.less";
+
+@import "fragments/_search.less";
+
+@import "fragments/_partial-offers.less";
+
+@import "fragments/_adverts.less";
+
+@import "fragments/_footer.less";
+
+@import "fragments/_partial_weather.less";
