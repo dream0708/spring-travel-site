@@ -26,6 +26,7 @@ import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFacto
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -44,6 +45,7 @@ import spring.travel.site.services.OffersService;
 import spring.travel.site.services.ProfileService;
 import spring.travel.site.services.UserService;
 import spring.travel.site.services.WeatherService;
+import spring.travel.site.view.JsonViewResolver;
 
 import java.util.List;
 
@@ -121,6 +123,11 @@ public class Application {
     @Bean
     public GeoLocator geoLocator() {
         return new GeoLocator();
+    }
+
+    @Bean
+    public ViewResolver jsonViewResolver() {
+        return new JsonViewResolver();
     }
 
     @Value("${application.secret}")
