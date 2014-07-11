@@ -119,9 +119,9 @@ public class HomeController extends OptionalUserController {
                                          Optional<DailyForecast> forecast, List<Advert> adverts) {
         Map<String, Object> map = new HashMap<>();
         user.ifPresent(u -> map.put("user", u));
-        map.put("offers", offers);
-        forecast.ifPresent(f -> map.put("forecast", f));
-        map.put("adverts", adverts);
+        map.put("offers", offers.subList(0, 4));
+        forecast.ifPresent(f -> map.put("weather", f));
+        map.put("adverts", adverts.subList(0, 4));
         return map;
     }
 }

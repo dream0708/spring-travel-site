@@ -45,9 +45,42 @@
                     <li>
                         <span class="offer">
                             <span class="offertitle">$offer.title</span>
+                            <img class="offerimage" src="$offer.image" alt="$offer.title">
                         </span>
                     </li>
                 #end
+            </ul>
+        </div>
+        #end
+        #if($weather)
+            <div class="weather">
+                <h2>Weather</h2>
+                <h3>$weather.city.name</h3>
+                <ul>
+                    #foreach($forecast in $weather.forecasts)
+                        <li>
+                            <span class="forecast">
+                                <span class="date">Day</span>
+                                <img src="http://openweathermap.org/img/w/${forecast.icon}.png}"
+                                     alt="$forecast.summary" title="$forecast.summary"/>
+                            </span>
+                        </li>
+                    #end
+                </ul>
+            </div>
+        #end
+        #if(!$adverts.isEmpty())
+        <div id="adverts">
+            <ul>
+            #foreach($advert in $adverts)
+                <li>
+                    <span class="advice">Advertisment</span>
+                    <span class="advert">
+                        <img class="advertimage" src="$advert.image" alt="$advert.title" title="$advert.title">
+                    </span>
+                </li>
+                }
+            #end
             </ul>
         </div>
         #end
