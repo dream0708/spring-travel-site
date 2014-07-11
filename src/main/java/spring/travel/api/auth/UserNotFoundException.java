@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package spring.travel.api.controllers;
+package spring.travel.api.auth;
 
-public class NotFoundException extends Exception {
+public class UserNotFoundException extends Exception {
 }

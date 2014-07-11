@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import spring.travel.api.auth.AuthException;
+import spring.travel.api.auth.UserNotFoundException;
 import spring.travel.api.auth.PlaySessionCookieBaker;
-import spring.travel.api.compose.Executable;
 import spring.travel.api.model.LoginData;
 import spring.travel.api.model.user.User;
 import spring.travel.api.services.LoginService;
@@ -57,10 +57,10 @@ public class LoginController {
                     try {
                         result.setResult(success(user.get()));
                     } catch (AuthException ae) {
-                        result.setErrorResult(new NotFoundException());
+                        result.setErrorResult(new UserNotFoundException());
                     }
                 } else {
-                    result.setErrorResult(new NotFoundException());
+                    result.setErrorResult(new UserNotFoundException());
                 }
             }
         ).execute();
@@ -69,7 +69,7 @@ public class LoginController {
 
     @ExceptionHandler
     @SuppressWarnings("unused")
-    public ResponseEntity<Void> handleNotFound(NotFoundException nfe) {
+    public ResponseEntity<Void> handleNotFound(UserNotFoundException nfe) {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

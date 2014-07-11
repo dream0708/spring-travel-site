@@ -33,12 +33,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import spring.travel.api.Application;
+import spring.travel.api.auth.UserNotFoundException;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.model.user.Address;
 import spring.travel.api.model.LoginData;
 import spring.travel.api.model.user.User;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,7 +116,7 @@ public class LoginControllerTest {
             param("password", "bar").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
             andExpect(request().asyncStarted()).
-            andExpect(request().asyncResult(instanceOf(NotFoundException.class))).
+            andExpect(request().asyncResult(instanceOf(UserNotFoundException.class))).
             andReturn();
 
         this.mockMvc.perform(asyncDispatch(mvcResult)).
