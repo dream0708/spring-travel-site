@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
@@ -34,7 +35,6 @@ import spring.travel.api.auth.PlaySessionCookieBaker;
 import spring.travel.api.auth.Signer;
 import spring.travel.api.auth.Verifier;
 import spring.travel.api.controllers.GeoLocator;
-import spring.travel.api.model.weather.Weather;
 import spring.travel.api.request.RequestInfoInterceptor;
 import spring.travel.api.request.RequestInfoResolver;
 import spring.travel.api.services.AdvertService;
@@ -59,7 +59,7 @@ public class Application {
 
     @Bean
     public AsyncRestTemplate asyncRestTemplate() {
-        return new AsyncRestTemplate();
+        return new AsyncRestTemplate(new HttpComponentsAsyncClientHttpRequestFactory());
     }
 
     @Value("${profile.service.url}")
