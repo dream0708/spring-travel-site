@@ -17,6 +17,7 @@ package spring.travel.site.view.model;
 
 import spring.travel.site.model.weather.Forecast;
 
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -49,8 +50,8 @@ public class ForecastView {
             new SimpleDateFormat("yyyy-MM-dd").format(date),
             new SimpleDateFormat("EEEE").format(date),
             forecast.getWeather()[0].getMain(),
-            forecast.getTemperatures().getMax().toPlainString(),
-            forecast.getTemperatures().getMin().toPlainString(),
+            forecast.getTemperatures().getMax().setScale(1, RoundingMode.DOWN).toPlainString(),
+            forecast.getTemperatures().getMin().setScale(1, RoundingMode.DOWN).toPlainString(),
             forecast.getWeather()[0].getIcon()
         );
     }
@@ -60,7 +61,7 @@ public class ForecastView {
     }
 
     public String getDay() {
-        return date;
+        return day;
     }
 
     public String getSummary() {
