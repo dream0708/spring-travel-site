@@ -48,6 +48,9 @@ import spring.travel.site.model.user.Profile;
 import spring.travel.site.model.user.Spending;
 import spring.travel.site.model.user.User;
 import spring.travel.site.model.weather.DailyForecast;
+import spring.travel.site.view.model.AdvertsView;
+import spring.travel.site.view.model.DailyForecastView;
+import spring.travel.site.view.model.OffersView;
 
 import javax.servlet.http.Cookie;
 import java.io.InputStream;
@@ -56,9 +59,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static junit.framework.Assert.assertNull;
 import static org.hamcrest.core.Is.isA;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -117,10 +121,11 @@ public class HomeControllerTest {
             new Advert("Advert 1", "advert1.jpg", "Blah blah"),
             new Advert("Advert 2", "advert2.jpg", "Blah blah"),
             new Advert("Advert 3", "advert3.jpg", "Blah blah"),
-            new Advert("Advert 4", "advert4.jpg", "Blah blah")
+            new Advert("Advert 4", "advert4.jpg", "Blah blah"),
+            new Advert("Advert 5", "advert5.jpg", "Blah blah")
         );
 
-        stubGet("/adverts?count=4&target=low", adverts);
+        stubGet("/adverts?count=5&target=low", adverts);
 
         String signature = "0923023985092384";
         String cookieName = "GETAWAY_SESSION";
@@ -152,14 +157,16 @@ public class HomeControllerTest {
         User user = (User)model.get("user");
         assertEquals("Fred", user.getFirstName());
 
-        List<Offer> modelOffers = (List<Offer>)model.get("offers");
-        assertEquals("Offer 1", modelOffers.get(0).getTitle());
+        OffersView modelOffers = (OffersView)model.get("offers");
+        assertNotNull(modelOffers);
+        assertEquals("Offer 1", modelOffers.getOffers().get(0).getTitle());
 
-        List<Advert> modelAdverts = (List<Advert>)model.get("adverts");
-        assertEquals("Advert 1", modelAdverts.get(0).getTitle());
+        AdvertsView modelAdverts = (AdvertsView)model.get("adverts");
+        assertNotNull(modelAdverts);
+        assertEquals("Advert 1", modelAdverts.getAdverts().get(0).getTitle());
 
-        DailyForecast modelForecast = (DailyForecast)model.get("weather");
-        assertEquals(2652546, modelForecast.getCity().getId());
+        DailyForecastView modelForecast = (DailyForecastView)model.get("weather");
+        assertEquals("Colnbrook", modelForecast.getCity());
     }
 
     @Test
@@ -179,10 +186,11 @@ public class HomeControllerTest {
             new Advert("Advert 1", "advert1.jpg", "Blah blah"),
             new Advert("Advert 2", "advert2.jpg", "Blah blah"),
             new Advert("Advert 3", "advert3.jpg", "Blah blah"),
-            new Advert("Advert 4", "advert4.jpg", "Blah blah")
+            new Advert("Advert 4", "advert4.jpg", "Blah blah"),
+            new Advert("Advert 5", "advert5.jpg", "Blah blah")
         );
 
-        stubGet("/adverts?count=4", adverts);
+        stubGet("/adverts?count=5", adverts);
 
         MvcResult mvcResult = this.mockMvc.perform(get("/").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
@@ -201,14 +209,16 @@ public class HomeControllerTest {
 
         assertNull(model.get("user"));
 
-        List<Offer> modelOffers = (List<Offer>)model.get("offers");
-        assertEquals("Offer 1", modelOffers.get(0).getTitle());
+        OffersView modelOffers = (OffersView)model.get("offers");
+        assertNotNull(modelOffers);
+        assertEquals("Offer 1", modelOffers.getOffers().get(0).getTitle());
 
-        List<Advert> modelAdverts = (List<Advert>)model.get("adverts");
-        assertEquals("Advert 1", modelAdverts.get(0).getTitle());
+        AdvertsView modelAdverts = (AdvertsView)model.get("adverts");
+        assertNotNull(modelAdverts);
+        assertEquals("Advert 1", modelAdverts.getAdverts().get(0).getTitle());
 
-        DailyForecast modelForecast = (DailyForecast)model.get("weather");
-        assertEquals(2652546, modelForecast.getCity().getId());
+        DailyForecastView modelForecast = (DailyForecastView)model.get("weather");
+        assertEquals("Colnbrook", modelForecast.getCity());
     }
 
     private void stubWeather(String url) throws Exception {

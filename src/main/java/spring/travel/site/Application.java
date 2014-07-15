@@ -22,14 +22,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.mustache.MustacheViewResolver;
+import org.springframework.web.servlet.view.mustache.java.MustacheJTemplateFactory;
 import spring.travel.site.auth.CookieDecoder;
 import spring.travel.site.auth.CookieEncoder;
 import spring.travel.site.auth.PlaySessionCookieBaker;
@@ -130,6 +135,19 @@ public class Application {
         return new JsonViewResolver();
     }
 
+    @Bean
+    public ViewResolver mustacheViewResolver() {
+        MustacheViewResolver resolver = new MustacheViewResolver();
+        resolver.setContentType("text/html");
+        MustacheJTemplateFactory mustacheJTemplateFactory = new MustacheJTemplateFactory();
+        mustacheJTemplateFactory.setResourceLoader(new DefaultResourceLoader());
+        resolver.setTemplateFactory(mustacheJTemplateFactory);
+        resolver.setPrefix("/templates/");
+        resolver.setSuffix(".mustache");
+        resolver.setCache(false);
+        return resolver;
+   }
+
     @Value("${application.secret}")
     private String applicationSecret;
 
@@ -179,6 +197,13 @@ public class Application {
             @Override
             public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
                 argumentResolvers.add(new RequestInfoResolver());
+            }
+            @Override
+            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+                configurer.favorPathExtension(false).
+                    useJaf(false).
+                    defaultContentType(MediaType.TEXT_HTML).
+                    mediaType("json", MediaType.APPLICATION_JSON);
             }
         };
     }

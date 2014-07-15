@@ -5,6 +5,7 @@
 @login-link-color: #F4BA70;
 @nav-color: #f0f0f0;
 @form-label-color: #808080;
+@headblock-background: #F0F0F0;
 
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, em, img, strong, sub, sup, b, u, i, dl, dt, dd, ol, ul, li,
@@ -34,7 +35,7 @@ body {
   }
 }
 
-#wrapper {
+.wrapper {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
@@ -46,7 +47,7 @@ body {
   }
 }
 
-#banner {
+.banner {
   width: 100%;
   background-color: @banner-background;
   padding-bottom: 0.2rem;
@@ -61,7 +62,7 @@ body {
   }
 }
 
-#logo {
+.logo {
   font-family: 'Chewy', cursive;
   font-size: 2.2rem;
   color: @logo-color;
@@ -84,7 +85,7 @@ body {
 
   margin-top: 0.7rem;
   @media only screen and (min-width:320px) and (max-width: 359px) {
-    margin-top: 1rem;
+     margin-top: 1rem;
   }
   @media only screen and (min-width:360px) and (max-width: 479px) {
     margin-top: 1.3rem;
@@ -120,6 +121,17 @@ body {
   }
 }
 
+.headblock {
+  background-color: @headblock-background;
+}
+
+.more {
+  font-size: 0.7rem;
+  color: #808080;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 @import "fragments/_login.less";
 
 @import "fragments/_search.less";
@@ -131,3 +143,6 @@ body {
 @import "fragments/_footer.less";
 
 @import "fragments/_partial_weather.less";
+
+@import "fragments/_offers.less";
+

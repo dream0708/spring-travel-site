@@ -1,6 +1,13 @@
 @search-background-color: #F0F0F0;
 
-#search {
+.search {
+  display: block;
+  @media only screen and (min-width:620px) {
+    display: inline;
+    width: 46%;
+    height: 100%;
+    float: left;
+  }
   padding: 2%;
   margin-top: 0.5rem;
   background-color: @search-background-color;

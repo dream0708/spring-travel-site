@@ -1,0 +1,97 @@
+@adverts-background-color: #D0D0D0;
+@advert-advice-color: #707070;
+
+.mainadvert {
+  display: none;
+  @media only screen and (min-width:620px) {
+    display: inline;
+    float: right;
+    padding: 2%;
+    width: 46%;
+    margin-top: 0.5rem;
+  }
+
+  .advice {
+    font-size: 0.9rem;
+    color: @advert-advice-color;
+    margin-left: 3%;
+  }
+
+  img {
+    display: block;
+    max-width: 95%;
+    max-height: 10rem;
+    margin: 0.3rem 0 0 0.5rem;
+  }
+}
+
+.spacer {
+  display: none;
+  @media only screen and (min-width:620px) {
+    display: block;
+    width: 100%;
+    height: 0;
+    clear: both;
+  }
+}
+
+.adverts {
+  padding: 2%;
+  margin-top: 0.5rem;
+  background-color: @adverts-background-color;
+
+  ul {
+    width: 100%;
+    font-size: 0;
+    display: block;
+
+    li:nth-child(3) {
+      display: none;
+      @media only screen and (min-width:460px) {
+        display: inline-block;
+      }
+    }
+
+    li:nth-child(4) {
+      display: none;
+      @media only screen and (min-width:620px) {
+        display: inline-block;
+      }
+    }
+
+    li {
+      display: inline-block;
+      font-size: 1rem;
+      width: 100%;
+      margin: 0.3rem 0;
+      @media only screen and (min-width:320px) and (max-width:459px) {
+        width: 100% / 2;
+      }
+      @media only screen and (min-width:460px) and (max-width:619px) {
+        width: 100% / 3;
+      }
+      @media only screen and (min-width:620px) {
+        width: 100% / 4;
+      }
+    }
+  }
+
+  .advert {
+    display: block;
+
+    img {
+      display: block;
+      max-width: 95%;
+      margin: 0.3rem auto 0;
+      font-size: 0.7rem;
+      color: @advert-advice-color;
+    }
+  }
+
+  .advice {
+    font-size: 0.7rem;
+    color: @advert-advice-color;
+    margin-left: 3%;
+  }
+}
+

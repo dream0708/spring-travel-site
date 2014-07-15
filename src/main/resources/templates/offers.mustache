@@ -1,0 +1,21 @@
+{{<body}}
+{{$content}}
+    {{#offers}}
+    <div class="offers">
+        <h2>Offers</h2>
+        <ul>
+            {{#offers}}
+                <li>
+                    <span class="offer">
+                        <span class="title">{{title}}</span>
+                        <img src="{{assets}}/{{image}}" alt="{{title}}" title="{{title}}">
+                        <span class="details">{{details}}</span>
+                    </span>
+                </li>
+            {{/offers}}
+        </ul>
+        <a class="more" name="more">More >></a>
+    </div>
+    {{/offers}}
+{{/content}}
+{{/body}}
