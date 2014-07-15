@@ -20,7 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.ModelAndView;
 import spring.travel.site.compose.AsyncTask;
@@ -104,7 +103,7 @@ public class HomeController extends OptionalUserController {
                         Optional<Profile> profile = profileLoyalty.flatMap(t -> t.a());
                         Optional<Loyalty> loyalty = profileLoyalty.flatMap(t -> t.b());
                         parallel(
-                            advertService.advert(5, profile),
+                            advertService.adverts(5, profile),
                             offersService.offers(profile, loyalty)
                         ).onCompletion(
                             adsOffers -> collector.updateB(adsOffers)

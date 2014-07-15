@@ -70,7 +70,7 @@ public class OffersController extends OptionalUserController {
                         Optional<Profile> profile = profileLoyalty.flatMap(t -> t.a());
                         Optional<Loyalty> loyalty = profileLoyalty.flatMap(t -> t.b());
                         parallel(
-                            advertService.advert(4, profile),
+                            advertService.adverts(4, profile),
                             offersService.offers(profile, loyalty)
                         ).onCompletion(
                             adsOffers -> {

@@ -38,7 +38,7 @@ public class AdvertService {
         this.url = url;
     }
 
-    public AsyncTask<List<Advert>> advert(int count, Optional<Profile> profile) {
+    public AsyncTask<List<Advert>> adverts(int count, Optional<Profile> profile) {
         return new ListenableFutureAsyncTaskAdapter<>(
             () -> {
                 String targetQueryString = profile.map(p -> "&target=" + target(p)).orElse("");
