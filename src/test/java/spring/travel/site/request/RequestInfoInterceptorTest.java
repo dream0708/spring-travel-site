@@ -98,7 +98,7 @@ public class RequestInfoInterceptorTest {
 
     @Test
     public void shouldSetRequestInfoAttributeWithIpAddressIfNoSessionCookiePresent() throws Exception {
-        List<String> cookies = Arrays.asList("SOME_COOKIE=gkdsjlsdijg", "ANOTHER_COOKIE=soihgweitj");
+        List<String> cookies = Arrays.asList("SOME_COOKIE=\"gkdsjlsdijg\"", "ANOTHER_COOKIE=\"soihgweitj\"");
         when(request.getHeaders("Cookie")).thenReturn(Collections.enumeration(cookies));
 
         assertTrue(interceptor.preHandle(request, response, new Object()));
@@ -114,7 +114,23 @@ public class RequestInfoInterceptorTest {
     @Test
     public void shouldSetRequestInfoAttributeIfSessionCookieIsPresent() throws Exception {
         String cookieValue = "90348039864-id=111";
-        List<String> cookies = Arrays.asList(cookieName + "=" + cookieValue);
+        List<String> cookies = Arrays.asList(cookieName + "=\"" + cookieValue + "\"");
+        when(request.getHeaders("Cookie")).thenReturn(Collections.enumeration(cookies));
+
+        assertTrue(interceptor.preHandle(request, response, new Object()));
+
+        verify(request, times(1)).setAttribute(eq(attributeName), requestCaptor.capture());
+        Request requestInfo = requestCaptor.getValue();
+
+        assertEquals(Optional.of(cookieValue), requestInfo.getCookieValue());
+        assertEquals(ipAddress, requestInfo.getRemoteAddress());
+        assertEquals(Optional.empty(), requestInfo.getUser());
+    }
+
+    @Test
+    public void shouldStripTheQuotesAroundTheCookieValue() throws Exception {
+        String cookieValue = "90348039864-id=111";
+        List<String> cookies = Arrays.asList(cookieName + "=" + "\"" + cookieValue + "\"");
         when(request.getHeaders("Cookie")).thenReturn(Collections.enumeration(cookies));
 
         assertTrue(interceptor.preHandle(request, response, new Object()));

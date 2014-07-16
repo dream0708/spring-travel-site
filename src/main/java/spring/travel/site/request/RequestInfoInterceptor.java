@@ -48,10 +48,21 @@ public class RequestInfoInterceptor extends HandlerInterceptorAdapter {
             while (cookies.hasMoreElements()) {
                 String cookie = cookies.nextElement();
                 if (cookie.startsWith(cookieName) && cookie.indexOf('=') > 0) {
-                    return Optional.of(cookie.substring(cookie.indexOf('=') + 1));
+                    return getCookieValue(cookie);
                 }
             }
         }
         return Optional.empty();
+    }
+
+    private Optional<String> getCookieValue(String cookie) {
+        String value = cookie.substring(cookie.indexOf('=') + 1);
+        if (value.startsWith("\"")) {
+            value = value.substring(1);
+        }
+        if (value.endsWith("\"")) {
+            value = value.substring(0, value.length() - 1);
+        }
+        return Optional.of(value);
     }
 }
