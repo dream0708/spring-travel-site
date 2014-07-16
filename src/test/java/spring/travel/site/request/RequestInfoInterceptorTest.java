@@ -26,6 +26,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -64,7 +69,7 @@ public class RequestInfoInterceptorTest {
 
     @Test
     public void shouldSetRequestInfoAttributeWithIpAddressIfRequestCookiesAreNull() throws Exception {
-        when(request.getCookies()).thenReturn(null);
+        when(request.getHeaders("Cookie")).thenReturn(null);
 
         assertTrue(interceptor.preHandle(request, response, new Object()));
 
@@ -78,8 +83,8 @@ public class RequestInfoInterceptorTest {
 
     @Test
     public void shouldSetRequestInfoAttributeWithIpAddressIfNoCookiePresent() throws Exception {
-        Cookie[] cookies = new Cookie[0];
-        when(request.getCookies()).thenReturn(cookies);
+        Enumeration<String> cookieHeaders = Collections.emptyEnumeration();
+        when(request.getHeaders("Cookie")).thenReturn(cookieHeaders);
 
         assertTrue(interceptor.preHandle(request, response, new Object()));
 
@@ -93,15 +98,8 @@ public class RequestInfoInterceptorTest {
 
     @Test
     public void shouldSetRequestInfoAttributeWithIpAddressIfNoSessionCookiePresent() throws Exception {
-        Cookie cookie1 = mock(Cookie.class);
-        Cookie cookie2 = mock(Cookie.class);
-        Cookie[] cookies = new Cookie[] {
-            cookie1, cookie2
-        };
-
-        when(request.getCookies()).thenReturn(cookies);
-        when(cookie1.getName()).thenReturn("SOME_COOKIE");
-        when(cookie2.getName()).thenReturn("ANOTHER_COOKIE");
+        List<String> cookies = Arrays.asList("SOME_COOKIE=gkdsjlsdijg", "ANOTHER_COOKIE=soihgweitj");
+        when(request.getHeaders("Cookie")).thenReturn(Collections.enumeration(cookies));
 
         assertTrue(interceptor.preHandle(request, response, new Object()));
 
@@ -115,16 +113,9 @@ public class RequestInfoInterceptorTest {
 
     @Test
     public void shouldSetRequestInfoAttributeIfSessionCookieIsPresent() throws Exception {
-        Cookie cookie = mock(Cookie.class);
-        Cookie[] cookies = new Cookie[] {
-            cookie
-        };
-
         String cookieValue = "90348039864-id=111";
-
-        when(request.getCookies()).thenReturn(cookies);
-        when(cookie.getName()).thenReturn(cookieName);
-        when(cookie.getValue()).thenReturn(cookieValue);
+        List<String> cookies = Arrays.asList(cookieName + "=" + cookieValue);
+        when(request.getHeaders("Cookie")).thenReturn(Collections.enumeration(cookies));
 
         assertTrue(interceptor.preHandle(request, response, new Object()));
 
@@ -132,6 +123,21 @@ public class RequestInfoInterceptorTest {
         Request requestInfo = requestCaptor.getValue();
 
         assertEquals(Optional.of(cookieValue), requestInfo.getCookieValue());
+        assertEquals(ipAddress, requestInfo.getRemoteAddress());
+        assertEquals(Optional.empty(), requestInfo.getUser());
+    }
+
+    @Test
+    public void shouldSetRequestInfoAttributeIfSessionCookieIsPresentButEmpty() throws Exception {
+        List<String> cookies = Arrays.asList(cookieName + "=");
+        when(request.getHeaders("Cookie")).thenReturn(Collections.enumeration(cookies));
+
+        assertTrue(interceptor.preHandle(request, response, new Object()));
+
+        verify(request, times(1)).setAttribute(eq(attributeName), requestCaptor.capture());
+        Request requestInfo = requestCaptor.getValue();
+
+        assertEquals(Optional.of(""), requestInfo.getCookieValue());
         assertEquals(ipAddress, requestInfo.getRemoteAddress());
         assertEquals(Optional.empty(), requestInfo.getUser());
     }

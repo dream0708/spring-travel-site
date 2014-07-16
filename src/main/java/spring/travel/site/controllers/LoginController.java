@@ -20,15 +20,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import spring.travel.site.auth.AuthException;
-import spring.travel.site.auth.UserNotFoundException;
 import spring.travel.site.auth.PlaySessionCookieBaker;
+import spring.travel.site.auth.UserNotFoundException;
 import spring.travel.site.model.LoginData;
 import spring.travel.site.model.user.User;
 import spring.travel.site.services.LoginService;
@@ -49,7 +49,7 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public DeferredResult<ResponseEntity<User>> login(@Valid @ModelAttribute LoginData loginData) {
+    public DeferredResult<ResponseEntity<User>> login(@Valid @RequestBody LoginData loginData) {
         DeferredResult<ResponseEntity<User>> result = new DeferredResult();
         loginService.login(loginData).onCompletion(
             (user) -> {

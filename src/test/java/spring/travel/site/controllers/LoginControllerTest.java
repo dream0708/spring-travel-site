@@ -77,8 +77,9 @@ public class LoginControllerTest {
     @Test
     public void shouldReturnBadRequestIfUsernameIsMissing() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post("/login").
-            param("password", "blah").
-            accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
+            contentType(MediaType.APPLICATION_JSON).
+            content("{ \"password\":\"foo\" }").
+            accept(MediaType.APPLICATION_JSON)).
             andExpect(status().is(400)).
             andReturn();
 
@@ -89,8 +90,9 @@ public class LoginControllerTest {
     @Test
     public void shouldReturnBadRequestIfPasswordIsMissing() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post("/login").
-            param("username", "blah").
-            accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
+            contentType(MediaType.APPLICATION_JSON).
+            content("{ \"username\":\"bill\" }").
+            accept(MediaType.APPLICATION_JSON)).
             andExpect(status().is(400)).
             andReturn();
 
@@ -101,7 +103,8 @@ public class LoginControllerTest {
     @Test
     public void shouldReturnBadRequestIfBothUsernameAndPasswordAreMissing() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post("/login").
-            accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
+            contentType(MediaType.APPLICATION_JSON).
+            accept(MediaType.APPLICATION_JSON)).
             andExpect(status().is(400)).
             andReturn();
 
@@ -112,8 +115,8 @@ public class LoginControllerTest {
     @Test
     public void shouldReturnNotFoundIfUserNotFound() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post("/login").
-            param("username", "foo").
-            param("password", "bar").
+            contentType(MediaType.APPLICATION_JSON).
+            content("{ \"username\":\"foo\", \"password\":\"bar\" }").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
             andExpect(request().asyncStarted()).
             andExpect(request().asyncResult(instanceOf(UserNotFoundException.class))).
@@ -133,8 +136,8 @@ public class LoginControllerTest {
         when(signer.sign("id=346436")).thenReturn("SIGNATURE");
 
         MvcResult mvcResult = this.mockMvc.perform(post("/login").
-            param("username", "brubble").
-            param("password", "bambam").
+            contentType(MediaType.APPLICATION_JSON).
+            content("{ \"username\":\"brubble\", \"password\":\"bambam\" }").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).
             andExpect(request().asyncStarted()).
             andExpect(request().asyncResult(instanceOf(ResponseEntity.class))).

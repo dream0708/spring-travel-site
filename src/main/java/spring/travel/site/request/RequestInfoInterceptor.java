@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,17 +38,20 @@ public class RequestInfoInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        List<Cookie> cookies = Optional.ofNullable(request.getCookies()).map(
-            c -> Arrays.asList(c)
-        ).orElse(
-            Collections.emptyList()
-        );
-        Optional<String> cookie = cookies.stream().filter(
-            c -> c.getName().equals(cookieName) // equalsIgnoreCase ?
-        ).findFirst().map(c -> c.getValue());
-
-        request.setAttribute(attributeName, new Request(Optional.empty(), cookie, request.getRemoteAddr()));
-
+        request.setAttribute(attributeName, new Request(Optional.empty(), getSessionCookie(request), request.getRemoteAddr()));
         return true;
+    }
+
+    private Optional<String> getSessionCookie(HttpServletRequest request) {
+        Enumeration<String> cookies = request.getHeaders("Cookie");
+        if (cookies != null) {
+            while (cookies.hasMoreElements()) {
+                String cookie = cookies.nextElement();
+                if (cookie.startsWith(cookieName) && cookie.indexOf('=') > 0) {
+                    return Optional.of(cookie.substring(cookie.indexOf('=') + 1));
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

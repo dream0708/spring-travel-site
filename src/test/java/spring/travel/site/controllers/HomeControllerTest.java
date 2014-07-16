@@ -140,7 +140,7 @@ public class HomeControllerTest {
 
         MvcResult mvcResult = this.mockMvc.perform(get("/").
             accept(MediaType.parseMediaType("application/json;charset=UTF-8")).
-            cookie(cookie)).
+            header("Cookie", cookieName + "=" + cookieValue)).
             andExpect(status().isOk()).
             andExpect(request().asyncStarted()).
             andExpect(request().asyncResult(isA(ModelAndView.class))).
