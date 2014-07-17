@@ -15,22 +15,37 @@
  */
 package spring.travel.site.compose;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class HandOff<T> {
 
-    private volatile T t;
+    private List<T> items = new ArrayList<>();
 
-    private CountDownLatch latch = new CountDownLatch(1);
+    private CountDownLatch latch;
+
+    public HandOff() {
+        this(1);
+    }
+
+    public HandOff(int count) {
+        latch = new CountDownLatch(count);
+    }
 
     public void put(T t) {
-        this.t = t;
+        items.add(t);
         latch.countDown();
     }
 
     public T get(int seconds) throws InterruptedException {
         latch.await(seconds, TimeUnit.SECONDS);
-        return t;
+        return items.get(0);
+    }
+
+    public List<T> getAll(int seconds) throws InterruptedException {
+        latch.await(seconds, TimeUnit.SECONDS);
+        return items;
     }
 }

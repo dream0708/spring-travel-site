@@ -15,9 +15,11 @@
  */
 package spring.travel.site.services;
 
+import com.google.common.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.AsyncRestTemplate;
 import spring.travel.site.compose.AsyncTask;
+import spring.travel.site.compose.ImmediatelySomethingAsyncTaskAdapter;
 import spring.travel.site.compose.ListenableFutureAsyncTaskAdapter;
 import spring.travel.site.model.weather.DailyForecast;
 import spring.travel.site.model.weather.Location;
@@ -27,6 +29,9 @@ public class WeatherService {
     @Autowired
     private AsyncRestTemplate asyncRestTemplate;
 
+    @Autowired
+    private Cache<String, DailyForecast> weatherCache;
+
     private String url;
 
     public WeatherService(String url) {
@@ -35,8 +40,15 @@ public class WeatherService {
 
     public AsyncTask<DailyForecast> forecast(Location location, int numberOfDays) {
         String queryString = "?id=" + location.getCityId() + "&cnt=" + numberOfDays + "&mode=json";
+
+        DailyForecast dailyForecast = weatherCache.getIfPresent(queryString);
+        if (dailyForecast != null) {
+            return new ImmediatelySomethingAsyncTaskAdapter<>(dailyForecast);
+        }
+
         return new ListenableFutureAsyncTaskAdapter<>(
-            () -> asyncRestTemplate.getForEntity(url + queryString, DailyForecast.class)
+            () -> asyncRestTemplate.getForEntity(url + queryString, DailyForecast.class),
+            (optionalDailyForecast) -> optionalDailyForecast.ifPresent(df -> weatherCache.put(queryString, df))
         );
     }
 }

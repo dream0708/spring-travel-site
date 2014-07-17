@@ -27,8 +27,15 @@ public class ListenableFutureAsyncTaskAdapter<T> implements AsyncTask<T>, Execut
 
     private volatile CompletionHandler<Optional<T>> completionHandler;
 
+    private volatile CompletionHandler<Optional<T>> beforeCompletionHandler;
+
     public ListenableFutureAsyncTaskAdapter(ServiceTask<T> serviceTask) {
+        this(serviceTask, (t) -> { ; }); // do nothing!
+    }
+
+    public ListenableFutureAsyncTaskAdapter(ServiceTask<T> serviceTask, CompletionHandler<Optional<T>> beforeCompletionHandler) {
         this.serviceTask = serviceTask;
+        this.beforeCompletionHandler = beforeCompletionHandler;
     }
 
     @Override
@@ -37,11 +44,13 @@ public class ListenableFutureAsyncTaskAdapter<T> implements AsyncTask<T>, Execut
         future.addCallback(new ListenableFutureCallback<ResponseEntity<T>>() {
             @Override
             public void onSuccess(ResponseEntity<T> responseEntity) {
+                beforeCompletionHandler.handle(Optional.ofNullable(responseEntity.getBody()));
                 completionHandler.handle(Optional.ofNullable(responseEntity.getBody()));
             }
 
             @Override
             public void onFailure(Throwable throwable) {
+                beforeCompletionHandler.handle(Optional.empty());
                 completionHandler.handle(Optional.empty());
             }
         });

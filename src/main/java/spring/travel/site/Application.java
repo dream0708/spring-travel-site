@@ -15,6 +15,8 @@
  */
 package spring.travel.site;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -41,6 +43,7 @@ import spring.travel.site.auth.PlaySessionCookieBaker;
 import spring.travel.site.auth.Signer;
 import spring.travel.site.auth.Verifier;
 import spring.travel.site.controllers.GeoLocator;
+import spring.travel.site.model.weather.DailyForecast;
 import spring.travel.site.request.RequestInfoInterceptor;
 import spring.travel.site.request.RequestInfoResolver;
 import spring.travel.site.services.AdvertService;
@@ -53,6 +56,7 @@ import spring.travel.site.services.WeatherService;
 import spring.travel.site.view.JsonViewResolver;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAutoConfiguration
@@ -128,6 +132,11 @@ public class Application {
     @Bean
     public GeoLocator geoLocator() {
         return new GeoLocator();
+    }
+
+    @Bean
+    public Cache<String, DailyForecast> weatherCache() {
+        return CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.MINUTES).build();
     }
 
     @Bean
