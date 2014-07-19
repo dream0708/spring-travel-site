@@ -1,0 +1,80 @@
+@news-background-color: #F0F0F0;
+
+.news {
+  clear: left;
+  padding: 2%;
+  margin-top: 0.5rem;
+  background-color: @offers-background-color;
+
+  ul {
+    width: 100%;
+    font-size: 0;
+    display: block;
+
+    li {
+      display: inline-block;
+      font-size: 1rem;
+      width: 100%;
+      margin: 0.3rem 0;
+      @media only screen and (min-width:620px) {
+        width: 50%;
+      }
+
+      .news-item {
+        display: block;
+
+        span {
+          font-size: 0.6rem;
+          display: block;
+          margin-left: 3%;
+        }
+
+        .headline {
+          font-size: 0.7rem;
+          display: block;
+          margin-left: 3%;
+          @media only screen and (min-width:320px) {
+            font-size: 0.8rem;
+          }
+          @media only screen and (min-width:460px) {
+            font-size: 0.7rem;
+          }
+        }
+
+        img {
+          display: block;
+          max-width: 95%;
+          max-height: 60%;
+          margin: 0.3rem auto 0.3rem;
+          @media only screen and (min-width:360px) and (max-width:619px) {
+            max-width: 45%;
+            float: left;
+          }
+          @media only screen and (min-width:620px) {
+            max-width: 95%;
+          }
+        }
+
+        .text {
+          @media only screen and (min-width:360px) and (max-width:619px) {
+            max-width: 50%;
+            float: right;
+            margin: 0.3rem auto 0.3rem;
+          }
+
+          .stand-first {
+            margin-bottom: 0.2rem;
+            @media only screen and (min-width:320px) {
+              font-size: 0.7rem;
+            }
+          }
+
+          a {
+            text-decoration: none;
+            color: #808080;
+          }
+        }
+      }
+    }
+  }
+}

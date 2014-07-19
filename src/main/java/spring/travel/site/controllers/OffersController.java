@@ -58,7 +58,7 @@ public class OffersController extends OptionalUserController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public DeferredResult<ModelAndView> home(@RequestInfo Request requestInfo) {
+    public DeferredResult<ModelAndView> offers(@RequestInfo Request requestInfo) {
         return withOptionalUser(requestInfo,
             (request, response) -> {
 

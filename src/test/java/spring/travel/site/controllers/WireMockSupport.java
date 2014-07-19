@@ -34,6 +34,13 @@ public class WireMockSupport {
                 withBody(mapper.writeValueAsString(response))));
     }
 
+    public static void stubGet(String url, String response) throws Exception {
+        stubFor(WireMock.get(urlEqualTo(url)).
+            willReturn(aResponse().
+                withHeader("Content-Type", "application/json").
+                withBody(response)));
+    }
+
     public static void stubPost(String url, Object body, Object response) throws Exception {
         stubFor(WireMock.post(urlEqualTo(url)).
             withRequestBody(equalToJson(mapper.writeValueAsString(body))).

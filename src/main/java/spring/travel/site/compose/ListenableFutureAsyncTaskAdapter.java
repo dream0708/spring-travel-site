@@ -21,29 +21,29 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.Optional;
 
-public class ListenableFutureAsyncTaskAdapter<T> implements AsyncTask<T>, Executable {
+public class ListenableFutureAsyncTaskAdapter<A> implements AsyncTask<A>, Executable {
 
-    private final ServiceTask<T> serviceTask;
+    private final ServiceTask<A> serviceTask;
 
-    private volatile CompletionHandler<Optional<T>> completionHandler;
+    private volatile CompletionHandler<Optional<A>> completionHandler;
 
-    private volatile CompletionHandler<Optional<T>> beforeCompletionHandler;
+    private volatile CompletionHandler<Optional<A>> beforeCompletionHandler;
 
-    public ListenableFutureAsyncTaskAdapter(ServiceTask<T> serviceTask) {
+    public ListenableFutureAsyncTaskAdapter(ServiceTask<A> serviceTask) {
         this(serviceTask, (t) -> { ; }); // do nothing!
     }
 
-    public ListenableFutureAsyncTaskAdapter(ServiceTask<T> serviceTask, CompletionHandler<Optional<T>> beforeCompletionHandler) {
+    public ListenableFutureAsyncTaskAdapter(ServiceTask<A> serviceTask, CompletionHandler<Optional<A>> beforeCompletionHandler) {
         this.serviceTask = serviceTask;
         this.beforeCompletionHandler = beforeCompletionHandler;
     }
 
     @Override
     public void execute() {
-        ListenableFuture<ResponseEntity<T>> future = serviceTask.execute();
-        future.addCallback(new ListenableFutureCallback<ResponseEntity<T>>() {
+        ListenableFuture<ResponseEntity<A>> future = serviceTask.execute();
+        future.addCallback(new ListenableFutureCallback<ResponseEntity<A>>() {
             @Override
-            public void onSuccess(ResponseEntity<T> responseEntity) {
+            public void onSuccess(ResponseEntity<A> responseEntity) {
                 beforeCompletionHandler.handle(Optional.ofNullable(responseEntity.getBody()));
                 completionHandler.handle(Optional.ofNullable(responseEntity.getBody()));
             }
@@ -57,7 +57,7 @@ public class ListenableFutureAsyncTaskAdapter<T> implements AsyncTask<T>, Execut
     }
 
     @Override
-    public Executable onCompletion(CompletionHandler<Optional<T>> completionHandler) {
+    public Executable onCompletion(CompletionHandler<Optional<A>> completionHandler) {
         this.completionHandler = completionHandler;
         return this;
     }

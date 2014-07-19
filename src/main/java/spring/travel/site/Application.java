@@ -43,12 +43,15 @@ import spring.travel.site.auth.PlaySessionCookieBaker;
 import spring.travel.site.auth.Signer;
 import spring.travel.site.auth.Verifier;
 import spring.travel.site.controllers.GeoLocator;
+import spring.travel.site.model.NewsItem;
 import spring.travel.site.model.weather.DailyForecast;
 import spring.travel.site.request.RequestInfoInterceptor;
 import spring.travel.site.request.RequestInfoResolver;
 import spring.travel.site.services.AdvertService;
 import spring.travel.site.services.LoginService;
 import spring.travel.site.services.LoyaltyService;
+import spring.travel.site.services.news.NewsDigester;
+import spring.travel.site.services.news.NewsService;
 import spring.travel.site.services.OffersService;
 import spring.travel.site.services.ProfileService;
 import spring.travel.site.services.UserService;
@@ -136,7 +139,25 @@ public class Application {
 
     @Bean
     public Cache<String, DailyForecast> weatherCache() {
-        return CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.MINUTES).build();
+        return CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES).build();
+    }
+
+    @Bean
+    public Cache<String, List<NewsItem>> newsCache() {
+        return CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES).build();
+    }
+
+    @Value("${news.service.url}")
+    private String newsServiceUrl;
+
+    @Bean
+    public NewsService newsService() {
+        return new NewsService(newsServiceUrl);
+    }
+
+    @Bean
+    public NewsDigester newsDigester() {
+        return new NewsDigester();
     }
 
     @Bean
